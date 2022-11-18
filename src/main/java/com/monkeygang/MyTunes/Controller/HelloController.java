@@ -1,4 +1,4 @@
-package com.monkeygang.MyTunes;
+package com.monkeygang.MyTunes.Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

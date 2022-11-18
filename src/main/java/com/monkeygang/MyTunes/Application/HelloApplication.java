@@ -1,4 +1,4 @@
-package com.monkeygang.MyTunes;
+package com.monkeygang.MyTunes.Application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
