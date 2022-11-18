@@ -1,8 +1,8 @@
-module com.monkeygang.demo {
+module com.monkeygang.MyTunes {
     requires javafx.controls;
     requires javafx.fxml;
-            
-                            
-    opens com.monkeygang.demo to javafx.fxml;
-    exports com.monkeygang.demo;
+
+
+    opens com.monkeygang.MyTunes to javafx.fxml;
+    exports com.monkeygang.MyTunes;
 }
