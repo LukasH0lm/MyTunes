@@ -4,31 +4,72 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monkeygang.MyTunes.Controller.Control.MyTunesController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="692.0" prefWidth="919.0" style="-fx-background-color: #479cde;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monkeygang.MyTunes.Controller.Control.MyTunesController">
    <children>
-      <ListView fx:id="listviewPlaylist" layoutX="14.0" layoutY="94.0" onMouseClicked="#ordreValgt" prefHeight="200.0" prefWidth="210.0" />
-      <ListView fx:id="listviewSongsOnPlaylist" layoutX="246.0" layoutY="94.0" prefHeight="200.0" prefWidth="141.0" />
-      <ListView fx:id="listviewSongs" layoutX="426.0" layoutY="94.0" prefHeight="200.0" prefWidth="160.0" />
-      <Button fx:id="deleteSongButton" layoutX="502.0" layoutY="300.0" mnemonicParsing="false" onAction="#deleteSong" text="Delete" />
-      <Button fx:id="editPlaylistButton" layoutX="54.0" layoutY="303.0" mnemonicParsing="false" onAction="#editPlaylist" text="Edit" />
-      <Button fx:id="playlistSongUpButton" layoutX="246.0" layoutY="303.0" mnemonicParsing="false" onAction="#playlistSongUp" text="Up" />
-      <Button fx:id="deletePlaylistButton" layoutX="90.0" layoutY="303.0" mnemonicParsing="false" onAction="#DeletePlaylist" text="Delete" />
-      <Button fx:id="newPlaylistButton" layoutX="14.0" layoutY="303.0" mnemonicParsing="false" onAction="#newPlaylist" text="New" />
-      <Button fx:id="playlistSongDownButton" layoutX="276.0" layoutY="303.0" mnemonicParsing="false" onAction="#playlistSongDown" text="Down" />
-      <Button fx:id="playlistSongDeleteButton" layoutX="323.0" layoutY="303.0" mnemonicParsing="false" onAction="#playlistSongDelete" text="Delete" />
-      <Button fx:id="closeButton" layoutX="541.0" layoutY="361.0" mnemonicParsing="false" onAction="#close" text="Close" />
-      <Button fx:id="editSongButton" layoutX="466.0" layoutY="300.0" mnemonicParsing="false" onAction="#editSong" text="Edit" />
-      <Button fx:id="newSongButton" layoutX="426.0" layoutY="300.0" mnemonicParsing="false" onAction="#newSong" text="New" />
-      <Button fx:id="playButton" layoutX="89.0" layoutY="33.0" mnemonicParsing="false" onAction="#playBack" style="-fx-background-image: url('https://cdn-icons-png.flaticon.com/512/149/149125.png');" text="Play" />
-      <Button fx:id="playBackButton" layoutX="28.0" layoutY="33.0" mnemonicParsing="false" onAction="#playBack" text="Back" />
-      <Button fx:id="skipPlayButton" layoutX="149.0" layoutY="33.0" mnemonicParsing="false" onAction="#skipPlay" text="Foward" />
-      <ProgressBar fx:id="songProgressBar" layoutX="223.0" layoutY="352.0" prefWidth="200.0" progress="0.0" />
-      <Label fx:id="playlistLabel" layoutX="14.0" layoutY="77.0" text="Playlists" />
-      <Label fx:id="songOnPlaylistLabel" layoutX="248.0" layoutY="77.0" text="Songs on Playlist" />
-      <Label fx:id="currentlyPlayingLabel" layoutX="262.0" layoutY="37.0" text="Song currently playing" />
-      <Label fx:id="songLabel" layoutX="426.0" layoutY="77.0" text="Songs" />
-      <Button layoutX="393.0" layoutY="94.0" mnemonicParsing="false" text="&lt;-" />
+      <ListView fx:id="listviewPlaylist" layoutX="10.0" layoutY="21.0" onMouseClicked="#ordreValgt" prefHeight="522.0" prefWidth="288.0" style="-fx-background-color: #716c63;" />
+      <ListView fx:id="listviewSongsOnPlaylist" layoutX="328.0" layoutY="21.0" prefHeight="522.0" prefWidth="222.0" style="-fx-background-color: #716c63;" />
+      <ListView fx:id="listviewSongs" layoutX="582.0" layoutY="20.0" prefHeight="522.0" prefWidth="327.0" style="-fx-background-color: #716c63;" />
+      <Button fx:id="deleteSongButton" layoutX="754.0" layoutY="546.0" mnemonicParsing="false" onAction="#deleteSong" text="Delete" />
+      <Button fx:id="editPlaylistButton" layoutX="134.0" layoutY="546.0" mnemonicParsing="false" onAction="#editPlaylist" text="Edit" />
+      <Button fx:id="playlistSongUpButton" layoutX="374.0" layoutY="546.0" mnemonicParsing="false" onAction="#playlistSongUp" text="Up" />
+      <Button fx:id="deletePlaylistButton" layoutX="170.0" layoutY="546.0" mnemonicParsing="false" onAction="#DeletePlaylist" text="Delete" />
+      <Button fx:id="newPlaylistButton" layoutX="94.0" layoutY="546.0" mnemonicParsing="false" onAction="#newPlaylist" text="New" />
+      <Button fx:id="playlistSongDownButton" layoutX="404.0" layoutY="546.0" mnemonicParsing="false" onAction="#playlistSongDown" text="Down" />
+      <Button fx:id="playlistSongDeleteButton" layoutX="451.0" layoutY="546.0" mnemonicParsing="false" onAction="#playlistSongDelete" text="Delete" />
+      <Button fx:id="closeButton" layoutX="868.0" layoutY="657.0" mnemonicParsing="false" onAction="#close" text="Close" />
+      <Button fx:id="editSongButton" layoutX="718.0" layoutY="546.0" mnemonicParsing="false" onAction="#editSong" text="Edit" />
+      <Button fx:id="newSongButton" layoutX="678.0" layoutY="546.0" mnemonicParsing="false" onAction="#newSong" text="New" />
+      <Button fx:id="playButton" layoutX="412.0" layoutY="608.0" mnemonicParsing="false" onAction="#playBack" style="-fx-background-image: url('https://cdn-icons-png.flaticon.com/512/149/149125.png');" text="Play" />
+      <Button fx:id="playBackButton" layoutX="351.0" layoutY="608.0" mnemonicParsing="false" onAction="#playBack" text="Back" />
+      <Button fx:id="skipPlayButton" layoutX="472.0" layoutY="608.0" mnemonicParsing="false" onAction="#skipPlay" text="Foward" />
+      <ProgressBar fx:id="songProgressBar" layoutX="52.0" layoutY="660.0" prefHeight="18.0" prefWidth="816.0" progress="0.47" style="-fx-accent: #f1be4e;">
+         <effect>
+            <InnerShadow blurType="GAUSSIAN">
+               <color>
+                  <Color red="0.9450980424880981" green="0.7450980544090271" blue="0.30588236451148987" />
+               </color>
+            </InnerShadow>
+         </effect></ProgressBar>
+      <Label fx:id="playlistLabel" layoutX="116.0" layoutY="6.0" text="Playlists" textFill="WHITE" />
+      <Label fx:id="songOnPlaylistLabel" layoutX="386.0" layoutY="6.0" text="Songs on Playlist" textFill="WHITE" />
+      <Label fx:id="currentlyPlayingLabel" layoutX="379.0" layoutY="640.0" text="Song currently playing" />
+      <Label fx:id="songLabel" layoutX="725.0" layoutY="6.0" text="Songs" textFill="WHITE" />
+      <Button layoutX="550.0" layoutY="66.0" mnemonicParsing="false" text="&lt;-" />
+      <ImageView fitHeight="522.0" fitWidth="288.0" layoutX="10.0" layoutY="23.0">
+         <image>
+            <Image url="https://i.imgur.com/Quz6duf.png" />
+         </image>
+         <effect>
+            <GaussianBlur />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="522.0" fitWidth="222.0" layoutX="328.0" layoutY="20.0">
+         <image>
+            <Image url="https://i.imgur.com/Quz6duf.png" />
+         </image>
+         <effect>
+            <GaussianBlur />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="522.0" fitWidth="327.0" layoutX="581.0" layoutY="20.0">
+         <image>
+            <Image url="https://i.imgur.com/Quz6duf.png" />
+         </image>
+         <effect>
+            <GaussianBlur />
+         </effect>
+      </ImageView>
+      <ImageView fitHeight="90.0" fitWidth="83.0" layoutX="10.0" layoutY="554.0" preserveRatio="true">
+         <image>
+            <Image url="https://i.imgur.com/Quz6duf.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
