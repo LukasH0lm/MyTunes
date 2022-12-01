@@ -1,6 +1,7 @@
 module com.monkeygang.MyTunes {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
 
 
 
