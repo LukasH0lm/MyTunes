@@ -1,7 +1,10 @@
 package com.monkeygang.MyTunes.Controller.Control;
 
+import com.monkeygang.MyTunes.Application.BuisnessLogic.AudioParser;
 import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
 import com.monkeygang.MyTunes.Application.ControlObjects.Song;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,6 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 
 public class MyTunesController {
@@ -27,18 +34,35 @@ public class MyTunesController {
     boolean isdblClicked;
 
 
+    public void listFilesForFolder(final File folder) throws IOException, InvalidDataException, UnsupportedTagException {
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                System.out.println(fileEntry);
+                AudioParser.parseMp3(fileEntry);
+                Song song = AudioParser.parseMp3(fileEntry);
 
+                if (!(Objects.equals(song.getTitle(), "error"))){
+                    listviewSongs.getItems().add(song);
+                }
+
+
+            }
+        }
+    }
     @FXML
-    public void initialize() {
-        Song careFree = new Song("Carefree", "Kevin Macleod", "carefree music");
-        Song fluffingADuck = new Song("Fluffing a Duck", "Kevin Macleod", "Duck music");
-        Song monkeysSpinningMonkeys = new Song("Monkeys Spinning Monkeys", "Kevin Macleod", "Monkey music");
-        Song sneakySnitch = new Song("Sneaky Snitch","Kevin Macleod","Sneaky music");
+    public void initialize() throws IOException, InvalidDataException, UnsupportedTagException {
 
-        listviewSongs.getItems().add(careFree);
-        listviewSongs.getItems().add(fluffingADuck);
-        listviewSongs.getItems().add(monkeysSpinningMonkeys);
-        listviewSongs.getItems().add(sneakySnitch);
+
+
+        final File folder = new File("src/main/resources/Songs/");
+        listFilesForFolder(folder);
+
+
+
+
+
 
 
 
@@ -197,37 +221,11 @@ public class MyTunesController {
 
         currentSong = listviewSongs.getSelectionModel().getSelectedItem();
 
-        if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED) && !drag_Flag) {
-            long diff = 0;
-            if(time1==0 || System.currentTimeMillis() - time1 > 1000)
-                time1=System.currentTimeMillis();
-            else
-                time2=System.currentTimeMillis();
-            if(time1!=0 && time2!=0){
-                diff=time2-time1;
-                time1 = 0;
-                time2 = 0;
-            }
-
-            System.out.println(diff);
-            if( diff>0 && diff <= 300)
-            {
-                isdblClicked=true;
-                playManager.playSong(currentSong,true);
-            }
-            else
-            {
-                isdblClicked=false;
-            }
-
-            System.out.println("IsDblClicked()"+isdblClicked);
 
 
 
-
-        }else{
-            drag_Flag = false;
-
+        if (doubleClickTester(event)){
+            playManager.playSong(currentSong,true);
         }
 
     }
@@ -240,6 +238,47 @@ public class MyTunesController {
     @FXML
     void close(ActionEvent event) {
         System.exit(1);
+    }
+
+
+    public boolean doubleClickTester(MouseEvent event){
+
+        if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED) && !drag_Flag) {
+            long diff = 0;
+            if(time1==0 || System.currentTimeMillis() - time1 > 1000)
+                time1=System.currentTimeMillis();
+            else
+                time2=System.currentTimeMillis();
+            if(time1!=0 && time2!=0){
+                diff=time2-time1;
+                time1 = 0;
+                time2 = 0;
+            }
+
+            System.out.println("time between clicks in ms: " + diff);
+            if( diff>0 && diff <= 300)
+            {
+                isdblClicked=true;
+
+            }
+            else
+            {
+                isdblClicked=false;
+
+            }
+
+            System.out.println("is double Click = "+isdblClicked);
+            return isdblClicked;
+
+
+
+
+        }else{
+            drag_Flag = false;
+            return false;
+
+        }
+
     }
 
     public void changePlayButtonIcon(boolean state){
@@ -256,7 +295,7 @@ public class MyTunesController {
         if (playManager.getIsPlaying()){
             playButton.setText("||");
         }else{
-            playButton.setText(">KE");
+            playButton.setText(">");
         }
 
     }

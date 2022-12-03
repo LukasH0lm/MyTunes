@@ -37,30 +37,39 @@ public class PlayManager {
 
         doubleClicked = doubleClickCheck.length != 0;
 
+        System.out.println("Play manager input song: " + song);
+
         if (isPlaying && previousSong == song && !doubleClicked){
             this.mp.pause();
             isPlaying = false;
-            controller.changePlayButtonIcon(isPlaying);
 
-        }else{
+        }else {
 
-            if (this.mp != null){
-                this.mp.stop();
+            if (song != null) {
+
+
+                if (this.mp != null) {
+                    this.mp.stop();
+                }
+
+
+                previousSong = song;
+                String filepath = "src/main/resources/Songs/" + song.getTitle() + ".mp3";
+
+                File f = new File(filepath);
+                Media m = new Media(f.toURI().toString());
+
+                this.mp = new MediaPlayer(m);
+                mp.play();
+
+                isPlaying = true;
+
+
             }
 
-
-            previousSong = song;
-            String filepath = "src/main/resources/Songs/" + song.getName() + ".mp3";
-
-            File f = new File(filepath);
-            Media m = new Media(f.toURI().toString());
-
-            this.mp = new MediaPlayer(m);
-            mp.play();
-            controller.changePlayButtonIcon(isPlaying);
-            isPlaying = true;
         }
 
+        controller.changePlayButtonIcon(isPlaying);
     }
 
     public boolean getIsPlaying(){
