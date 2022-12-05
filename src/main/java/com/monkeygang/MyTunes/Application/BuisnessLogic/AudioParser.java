@@ -6,6 +6,7 @@ import com.mpatric.mp3agic.*;
 
 public class AudioParser {
 
+    static int rollingId = 0;
 
     public static Song parseMp3(File song) throws InvalidDataException, UnsupportedTagException, IOException {
 
@@ -22,10 +23,11 @@ public class AudioParser {
                 System.out.println("Have album image data, length: " + albumImageData.length + " bytes");
                 System.out.println("Album image mime type: " + id3v2Tag.getAlbumImageMimeType());
             }
-            return new Song(id3v2Tag.getTitle(),id3v2Tag.getArtist(), id3v2Tag.getGenre());
+            rollingId++;
+            return new Song(rollingId,id3v2Tag.getTitle(),id3v2Tag.getArtist(), id3v2Tag.getGenre());
 
         }
-        return new Song("test","test","test");
+        return new Song(-1,"test","test","test");
 
     }
 }
