@@ -31,6 +31,9 @@ public class PlayManager {
     }
 
 
+
+
+
     public  void progressSlider() {
         controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
         this.mp.currentTimeProperty().addListener((obs, oldTime, newTime) ->
@@ -42,12 +45,17 @@ public class PlayManager {
         if (this.mp != null) {
 
                 this.mp.statusProperty().addListener((obs, oldStatus, newStatus) -> {
-
                         progressSlider();
+
                 });
         }
     }
 
+
+    public void progressSliderAdjust(){
+        this.mp.seek(Duration.seconds(controller.songProgressSlider.getValue()));
+
+    }
 
 
 

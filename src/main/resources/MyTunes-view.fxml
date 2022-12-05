@@ -61,6 +61,6 @@
             <Image url="https://i.imgur.com/Quz6duf.png" />
          </image>
       </ImageView>
-      <Slider fx:id="songProgressSlider" layoutX="21.0" layoutY="652.0" prefHeight="36.0" prefWidth="834.0" />
+      <Slider fx:id="songProgressSlider" layoutX="21.0" layoutY="652.0" onMousePressed="#progressSliderOnMousePressed" prefHeight="36.0" prefWidth="834.0" />
    </children>
 </Pane>

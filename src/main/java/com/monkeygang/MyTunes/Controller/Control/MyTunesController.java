@@ -168,6 +168,11 @@ public class MyTunesController {
     }
 
     @FXML
+    void progressSliderOnMousePressed(MouseEvent event) {
+        playManager.progressSliderAdjust();
+    }
+
+    @FXML
     void newPlaylist(ActionEvent event) {
 
     }
