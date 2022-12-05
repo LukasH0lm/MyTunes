@@ -7,11 +7,9 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +32,8 @@ public class MyTunesController {
     boolean isdblClicked;
 
 
+
+
     public void listFilesForFolder(final File folder) throws IOException, InvalidDataException, UnsupportedTagException {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
@@ -51,6 +51,13 @@ public class MyTunesController {
             }
         }
     }
+
+    @FXML
+    public Slider songProgressSlider;
+
+
+
+
     @FXML
     public void initialize() throws IOException, InvalidDataException, UnsupportedTagException {
 
@@ -61,12 +68,14 @@ public class MyTunesController {
 
 
 
-
-
-
-
-
     }
+
+
+
+
+
+
+
 
     @FXML
     private Button closeButton;
@@ -130,8 +139,7 @@ public class MyTunesController {
     @FXML
     private Label songOnPlaylistLabel;
 
-    @FXML
-    private ProgressBar songProgressBar;
+
 
     @FXML
     void DeletePlaylist(ActionEvent event) {
@@ -239,6 +247,11 @@ public class MyTunesController {
     void close(ActionEvent event) {
         System.exit(1);
     }
+
+
+
+
+
 
 
     public boolean doubleClickTester(MouseEvent event){

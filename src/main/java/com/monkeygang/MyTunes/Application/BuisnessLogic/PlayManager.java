@@ -31,6 +31,24 @@ public class PlayManager {
     }
 
 
+    public  void progressSlider() {
+        controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
+        this.mp.currentTimeProperty().addListener((obs, oldTime, newTime) ->
+                controller.songProgressSlider.setValue(newTime.toSeconds()));
+    }
+
+    public void initializeProgressSlider() {
+
+        if (this.mp != null) {
+
+                this.mp.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+
+                        progressSlider();
+                });
+        }
+    }
+
+
 
 
     public void playSong(Song song, boolean... doubleClickCheck){
@@ -61,6 +79,8 @@ public class PlayManager {
 
                 this.mp = new MediaPlayer(m);
                 mp.play();
+
+                initializeProgressSlider();
 
                 isPlaying = true;
 
