@@ -2,26 +2,30 @@ package com.monkeygang.MyTunes.Application.ControlObjects;
 
 public class Song {
 
+    int id;
     String title;
     String artist;
     String filepath;
     String genre;
 
 
-    public Song(String title, String artist, String genre) {
+    public Song(int id, String title, String artist, String genre) {
+        this.id = id;
         this.title = title;
         this.artist = artist;
         this.genre = genre;
     }
-    public Song(String title, String artist, String genre, String filepath) {
+    public Song(int id, String title, String artist, String genre, String filepath) {
+        this.id = id;
         this.title = title;
         this.artist = artist;
         this.genre = genre;
         this.filepath = filepath;
     }
 
-    public Song(String title, String artist, int genre) {
+    public Song(int id, String title, String artist, int genre) {
 
+        this.id = id;
         this.title = title;
         this.artist = artist;
         this.genre = id3v2GenreConverter(genre);
