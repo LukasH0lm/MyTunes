@@ -116,8 +116,10 @@ public class PlayManager {
 
 
     public void changePlaybackSpeed(String selectedItem) {
+        if (this.mp != null){
+            this.mp.setRate(Double.parseDouble( selectedItem));
+        }
 
-        this.mp.setRate(Double.parseDouble( selectedItem));
 
     }
 }
