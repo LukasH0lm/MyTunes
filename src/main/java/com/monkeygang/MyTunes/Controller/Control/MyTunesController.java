@@ -10,11 +10,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+
 
 
 public class MyTunesController {
@@ -305,7 +305,7 @@ public class MyTunesController {
 
     }
 
-    public void changePlayButtonIcon(boolean state){
+    public void changePlayButtonIcon(PlayManager.playState state){
 
         /*
         playSong() returnere en boolean der svarer til om den spiller en sang:
@@ -316,7 +316,7 @@ public class MyTunesController {
 
 
 
-        if (playManager.getIsPlaying()){
+        if (state == PlayManager.playState.PLAYING){
             playButton.setText("||");
         }else{
             playButton.setText(">");

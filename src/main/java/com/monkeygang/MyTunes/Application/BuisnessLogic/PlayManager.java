@@ -10,6 +10,15 @@ import java.io.File;
 
 public class PlayManager {
 
+
+    public enum playState {
+            PLAYING,
+            PAUSED,
+            STOPPED
+    }
+
+    playState currentplayState = playState.STOPPED;
+
     MyTunesController controller;
     private MediaPlayer mp;
 
@@ -29,8 +38,6 @@ public class PlayManager {
 
 
     }
-
-
 
 
 
@@ -66,54 +73,61 @@ public class PlayManager {
         doubleClicked = doubleClickCheck.length != 0;
 
         System.out.println("Play manager input song: " + song);
-
-        if (isPlaying && previousSong == song && !doubleClicked){
-            this.mp.pause();
-            isPlaying = false;
-
-        }else {
-
-            if (song != null) {
-
-
-                if (this.mp != null) {
-                    this.mp.stop();
-                }
-
-
-
-
-                previousSong = song;
-                String filepath = "src/main/resources/Songs/" + song.getTitle() + ".mp3";
-
-                File f = new File(filepath);
-                Media m = new Media(f.toURI().toString());
-
-                this.mp = new MediaPlayer(m);
-                mp.play();
-
-                initializeProgressSlider();
-
-
-
-                isPlaying = true;
-
-
+        if (previousSong != song){
+            if(this.mp != null){
+                this.mp.stop();
             }
+
+            currentplayState = playState.STOPPED;
+        }
+        previousSong = song;
+
+
+        if (currentplayState == playState.STOPPED){
+            String filepath = "src/main/resources/Songs/" + song.getTitle() + ".mp3";
+            File f = new File(filepath);
+            Media m = new Media(f.toURI().toString());
+            this.mp = new MediaPlayer(m);
+            mp.play();
+
+            currentplayState = playState.PLAYING;
+            initializeProgressSlider();
 
         }
 
-        controller.changePlayButtonIcon(isPlaying);
+        else if (currentplayState == playState.PLAYING){
+            if (doubleClicked){
+                this.mp.stop();
+                currentplayState = playState.STOPPED;
+                playSong(song);
+            }
+
+            System.out.println("pausing");
+            this.mp.pause();
+            currentplayState = playState.PAUSED;
+
+        }
+
+        else if (currentplayState == playState.PAUSED){
+            this.mp.play();
+            currentplayState = playState.PLAYING;
+
+        }
+
+        controller.changePlayButtonIcon(currentplayState);
+
+
+
+
     }
 
-    public boolean getIsPlaying(){
-        return isPlaying;
+    public playState getCurrentplayState(){
+        return currentplayState;
     }
 
     public Song getPreviousSong(){
         return previousSong;
     }
-
 
     public void changePlaybackSpeed(String selectedItem) {
         if (this.mp != null){
@@ -122,4 +136,5 @@ public class PlayManager {
 
 
     }
+
 }
