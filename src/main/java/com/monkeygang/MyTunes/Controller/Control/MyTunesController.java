@@ -5,6 +5,7 @@ import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
 import com.monkeygang.MyTunes.Application.ControlObjects.Song;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -56,6 +57,8 @@ public class MyTunesController {
     public Slider songProgressSlider;
 
 
+    @FXML
+    private ComboBox<String> playbackSpeed;
 
 
     @FXML
@@ -67,10 +70,13 @@ public class MyTunesController {
         listFilesForFolder(folder);
 
 
+        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "Normal", "1.25", "1.50", "1.75", "2.00"));
+        playbackSpeed.getSelectionModel().select("Normal");
+
+
+
 
     }
-
-
 
 
 
@@ -315,6 +321,15 @@ public class MyTunesController {
         }else{
             playButton.setText(">");
         }
+
+    }
+
+    @FXML
+    public void changeSpeed(){
+
+        playManager.changePlaybackSpeed(playbackSpeed.getSelectionModel().getSelectedItem());
+        System.out.println(playbackSpeed.getSelectionModel().getSelectedItem());
+
 
     }
 

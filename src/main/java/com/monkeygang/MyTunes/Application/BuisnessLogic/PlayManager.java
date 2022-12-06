@@ -34,6 +34,8 @@ public class PlayManager {
 
 
 
+
+
     public  void progressSlider() {
         controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
         this.mp.currentTimeProperty().addListener((obs, oldTime, newTime) ->
@@ -79,6 +81,8 @@ public class PlayManager {
                 }
 
 
+
+
                 previousSong = song;
                 String filepath = "src/main/resources/Songs/" + song.getTitle() + ".mp3";
 
@@ -89,6 +93,8 @@ public class PlayManager {
                 mp.play();
 
                 initializeProgressSlider();
+
+
 
                 isPlaying = true;
 
@@ -109,4 +115,9 @@ public class PlayManager {
     }
 
 
+    public void changePlaybackSpeed(String selectedItem) {
+
+        this.mp.setRate(Double.parseDouble( selectedItem));
+
+    }
 }
