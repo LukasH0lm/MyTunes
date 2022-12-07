@@ -37,6 +37,8 @@ public class PlayManager {
 
 
 
+
+
     }
 
 
@@ -60,9 +62,30 @@ public class PlayManager {
         }
     }
 
-
     public void progressSliderAdjust(){
         this.mp.seek(Duration.seconds(controller.songProgressSlider.getValue()));
+
+    }
+
+    public  void volumeSlider() {
+        controller.songVolumeSlider.setMax(mp.getVolume());
+        mp.volumeProperty().addListener((obs, oldVol, newVol) ->
+                controller.songVolumeSlider.setValue((Double) newVol));
+    }
+
+    public void initializeVolumeSlider() {
+
+        if (mp != null) {
+
+            mp.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+                volumeSlider();
+
+            });
+        }
+    }
+
+    public void volumeSliderAdjust(){
+        mp.setVolume(controller.songVolumeSlider.getValue());
 
     }
 
@@ -90,9 +113,11 @@ public class PlayManager {
             this.mp = new MediaPlayer(m);
             mp.play();
 
-            currentplayState = playState.PLAYING;
-            initializeProgressSlider();
 
+            currentplayState = playState.PLAYING;
+            controller.playbackSpeed.getSelectionModel().select("Normal");
+            initializeProgressSlider();
+            initializeVolumeSlider();
         }
 
         else if (currentplayState == playState.PLAYING){

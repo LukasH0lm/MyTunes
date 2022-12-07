@@ -58,7 +58,10 @@ public class MyTunesController {
 
 
     @FXML
-    private ComboBox<String> playbackSpeed;
+    public Slider songVolumeSlider;
+
+    @FXML
+    public ComboBox<String> playbackSpeed;
 
 
     @FXML
@@ -176,6 +179,14 @@ public class MyTunesController {
     @FXML
     void progressSliderOnMousePressed(MouseEvent event) {
         playManager.progressSliderAdjust();
+
+    }
+
+
+    @FXML
+    void volumeSliderOnMousePressed(MouseEvent event) {
+
+        playManager.volumeSliderAdjust();
     }
 
     @FXML
@@ -246,6 +257,9 @@ public class MyTunesController {
         if (doubleClickTester(event)){
             playManager.playSong(currentSong,true);
         }
+
+
+
 
     }
 
