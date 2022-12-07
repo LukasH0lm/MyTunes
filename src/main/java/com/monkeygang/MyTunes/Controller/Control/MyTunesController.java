@@ -2,6 +2,7 @@ package com.monkeygang.MyTunes.Controller.Control;
 
 import com.monkeygang.MyTunes.Application.BuisnessLogic.AudioParser;
 import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
+import com.monkeygang.MyTunes.Application.ControlObjects.Playlist;
 import com.monkeygang.MyTunes.Application.ControlObjects.Song;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -13,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Objects;
 
 
@@ -32,8 +34,36 @@ public class MyTunesController {
 
     boolean isdblClicked;
 
+    LinkedList<Song> allSongList;
 
 
+    @FXML
+    public void initialize() throws IOException, InvalidDataException, UnsupportedTagException {
+
+        allSongList = new LinkedList<>();
+
+        final File folder = new File("src/main/resources/Songs/");
+        listFilesForFolder(folder);
+
+        Playlist playlist0 = new Playlist("Kevin music");
+
+        playlist0.addSong(allSongList.get(0));
+        playlist0.addSong(allSongList.get(1));
+        playlist0.addSong(allSongList.get(2));
+        playlist0.addSong(allSongList.get(3));
+
+        listviewPlaylist.getItems().add(playlist0);
+
+
+
+
+        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "Normal", "1.25", "1.50", "1.75", "2.00"));
+        playbackSpeed.getSelectionModel().select("Normal");
+
+
+
+
+    }
 
     public void listFilesForFolder(final File folder) throws IOException, InvalidDataException, UnsupportedTagException {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
@@ -43,6 +73,7 @@ public class MyTunesController {
                 System.out.println(fileEntry);
                 AudioParser.parseMp3(fileEntry);
                 Song song = AudioParser.parseMp3(fileEntry);
+                allSongList.add(song);
 
                 if (!(Objects.equals(song.getTitle(), "error"))){
                     listviewSongs.getItems().add(song);
@@ -64,22 +95,7 @@ public class MyTunesController {
     public ComboBox<String> playbackSpeed;
 
 
-    @FXML
-    public void initialize() throws IOException, InvalidDataException, UnsupportedTagException {
 
-
-
-        final File folder = new File("src/main/resources/Songs/");
-        listFilesForFolder(folder);
-
-
-        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "Normal", "1.25", "1.50", "1.75", "2.00"));
-        playbackSpeed.getSelectionModel().select("Normal");
-
-
-
-
-    }
 
 
 
@@ -105,7 +121,7 @@ public class MyTunesController {
     private Button editSongButton;
 
     @FXML
-    private ListView<?> listviewPlaylist;
+    private ListView<Playlist> listviewPlaylist;
 
     @FXML
     private ListView<Song> listviewSongs = new ListView<>();
@@ -113,7 +129,7 @@ public class MyTunesController {
 
 
     @FXML
-    private ListView<?> listviewSongsOnPlaylist;
+    private ListView<Song> listviewSongsOnPlaylist;
 
     @FXML
     private Button newPlaylistButton;
@@ -226,6 +242,13 @@ public class MyTunesController {
 
     @FXML
     void playlistValgt(MouseEvent event) {
+        listviewSongsOnPlaylist.getItems().clear();
+
+        for (Song song : listviewPlaylist.getSelectionModel().getSelectedItem().getSongList()){
+            listviewSongsOnPlaylist.getItems().add(song);
+
+        }
+
 
     }
 
@@ -265,6 +288,15 @@ public class MyTunesController {
 
     @FXML
     void songOnPlaylistChosen(MouseEvent event) {
+
+        currentSong = listviewSongsOnPlaylist.getSelectionModel().getSelectedItem();
+
+
+
+
+        if (doubleClickTester(event)){
+            playManager.playSong(currentSong,true);
+        }
 
     }
 
