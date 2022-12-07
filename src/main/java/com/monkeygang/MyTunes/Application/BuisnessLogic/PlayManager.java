@@ -28,8 +28,11 @@ public class PlayManager {
     private Duration duration;
 
     private Song previousSong;
+    double previousVolumeValue = 1.0;
 
     boolean doubleClicked;
+
+
 
     public PlayManager(MyTunesController controller){
 
@@ -68,9 +71,11 @@ public class PlayManager {
     }
 
     public  void volumeSlider() {
-        controller.songVolumeSlider.setMax(mp.getVolume());
         mp.volumeProperty().addListener((obs, oldVol, newVol) ->
                 controller.songVolumeSlider.setValue((Double) newVol));
+
+
+
     }
 
     public void initializeVolumeSlider() {
@@ -81,6 +86,7 @@ public class PlayManager {
                 volumeSlider();
 
             });
+
         }
     }
 
@@ -99,7 +105,10 @@ public class PlayManager {
         if (previousSong != song){
             if(this.mp != null){
                 this.mp.stop();
+                previousVolumeValue = mp.volumeProperty().getValue();
+
             }
+
 
             currentplayState = playState.STOPPED;
         }
@@ -112,12 +121,15 @@ public class PlayManager {
             Media m = new Media(f.toURI().toString());
             this.mp = new MediaPlayer(m);
             mp.play();
+            volumeSlider();
 
 
             currentplayState = playState.PLAYING;
             controller.playbackSpeed.getSelectionModel().select("Normal");
             initializeProgressSlider();
             initializeVolumeSlider();
+            controller.songVolumeSlider.setValue(previousVolumeValue);
+            mp.setVolume(previousVolumeValue);
         }
 
         else if (currentplayState == playState.PLAYING){
@@ -155,10 +167,13 @@ public class PlayManager {
     }
 
     public void changePlaybackSpeed(String selectedItem) {
-        if (this.mp != null){
-            this.mp.setRate(Double.parseDouble( selectedItem));
+        if (this.mp != null) {
+            if (selectedItem == "normal") {
+                this.mp.setRate(1.0);
+            } else {
+                this.mp.setRate(Double.parseDouble(selectedItem));
+            }
         }
-
 
     }
 
