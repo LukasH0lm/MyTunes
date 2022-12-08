@@ -4,6 +4,7 @@ module com.monkeygang.MyTunes {
     requires javafx.media;
     requires java.xml;
     requires mp3agic;
+    requires java.sql;
 
 
     exports com.monkeygang.MyTunes.Controller.Control;

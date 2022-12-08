@@ -4,6 +4,7 @@ import com.monkeygang.MyTunes.Application.BuisnessLogic.AudioParser;
 import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
 import com.monkeygang.MyTunes.Application.ControlObjects.Playlist;
 import com.monkeygang.MyTunes.Application.ControlObjects.Song;
+import com.monkeygang.MyTunes.Application.ControlObjects.SongDaoImpl;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.collections.FXCollections;
@@ -40,6 +41,9 @@ public class MyTunesController {
     @FXML
     public void initialize() throws IOException, InvalidDataException, UnsupportedTagException {
 
+
+
+
         allSongList = new LinkedList<>();
 
         final File folder = new File("src/main/resources/Songs/");
@@ -53,8 +57,6 @@ public class MyTunesController {
         playlist0.addSong(allSongList.get(3));
 
         listviewPlaylist.getItems().add(playlist0);
-
-
 
 
         playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "Normal", "1.25", "1.50", "1.75", "2.00"));
