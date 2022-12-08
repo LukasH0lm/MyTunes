@@ -125,7 +125,7 @@ public class PlayManager {
 
 
             currentplayState = playState.PLAYING;
-            controller.playbackSpeed.getSelectionModel().select("Normal");
+            controller.playbackSpeed.getSelectionModel().select("1.0");
             initializeProgressSlider();
             initializeVolumeSlider();
             controller.songVolumeSlider.setValue(previousVolumeValue);

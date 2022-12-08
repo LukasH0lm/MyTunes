@@ -59,8 +59,8 @@ public class MyTunesController {
         listviewPlaylist.getItems().add(playlist0);
 
 
-        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "Normal", "1.25", "1.50", "1.75", "2.00"));
-        playbackSpeed.getSelectionModel().select("Normal");
+        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "1.0", "1.25", "1.50", "1.75", "2.00"));
+        playbackSpeed.getSelectionModel().select("1.0");
 
 
 
