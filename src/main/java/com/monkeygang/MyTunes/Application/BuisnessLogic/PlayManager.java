@@ -48,18 +48,16 @@ public class PlayManager {
 
 
 
-    public  void progressSlider() {
-        controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
-        this.mp.currentTimeProperty().addListener((obs, oldTime, newTime) ->
-                controller.songProgressSlider.setValue(newTime.toSeconds()));
-    }
+
 
     public void initializeProgressSlider() {
 
         if (this.mp != null) {
 
-                this.mp.statusProperty().addListener((obs, oldStatus, newStatus) -> {
-                        progressSlider();
+                this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                    controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
+                    this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) ->
+                            controller.songProgressSlider.setValue(newTime.toSeconds()));
 
                 });
         }
@@ -70,20 +68,14 @@ public class PlayManager {
 
     }
 
-    public  void volumeSlider() {
-        mp.volumeProperty().addListener((obs, oldVol, newVol) ->
-                controller.songVolumeSlider.setValue((Double) newVol));
-
-
-
-    }
 
     public void initializeVolumeSlider() {
 
         if (mp != null) {
 
-            mp.statusProperty().addListener((obs, oldStatus, newStatus) -> {
-                volumeSlider();
+            mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                mp.volumeProperty().addListener((obsV, oldVol, newVol) ->
+                        controller.songVolumeSlider.setValue((Double) newVol));
 
             });
 
@@ -121,7 +113,7 @@ public class PlayManager {
             Media m = new Media(f.toURI().toString());
             this.mp = new MediaPlayer(m);
             mp.play();
-            volumeSlider();
+
 
 
             currentplayState = playState.PLAYING;

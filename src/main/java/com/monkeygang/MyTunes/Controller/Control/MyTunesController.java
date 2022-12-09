@@ -205,6 +205,7 @@ public class MyTunesController {
     void volumeSliderOnMousePressed(MouseEvent event) {
 
         playManager.volumeSliderAdjust();
+
     }
 
     @FXML
