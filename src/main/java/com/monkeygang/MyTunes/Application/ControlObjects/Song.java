@@ -5,29 +5,25 @@ public class Song {
     int id;
     String title;
     String artist;
-    String filepath;
+    String album;
     String genre;
 
 
-    public Song(int id, String title, String artist, String genre) {
+    public Song(int id, String title, String artist, String album, String genre) {
         this.id = id;
         this.title = title;
         this.artist = artist;
+        this.album = album;
         this.genre = genre;
-    }
-    public Song(int id, String title, String artist, String genre, String filepath) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-        this.genre = genre;
-        this.filepath = filepath;
     }
 
-    public Song(int id, String title, String artist, int genre) {
+
+    public Song(int id, String title, String artist, String album, int genre) {
 
         this.id = id;
         this.title = title;
         this.artist = artist;
+        this.album = album;
         this.genre = id3v2GenreConverter(genre);
 
 
@@ -45,13 +41,7 @@ public class Song {
         this.title = title;
     }
 
-    public String getFilepath() {
-        return filepath;
-    }
 
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
-    }
 
     public String getGenre() {
         return genre;
@@ -162,4 +152,7 @@ public class Song {
 
     }
 
+    public String getAlbum() {
+        return this.album;
+    }
 }

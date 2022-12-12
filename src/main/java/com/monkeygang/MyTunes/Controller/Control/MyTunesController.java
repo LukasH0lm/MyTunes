@@ -2,9 +2,7 @@ package com.monkeygang.MyTunes.Controller.Control;
 
 import com.monkeygang.MyTunes.Application.BuisnessLogic.AudioParser;
 import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
-import com.monkeygang.MyTunes.Application.ControlObjects.Playlist;
-import com.monkeygang.MyTunes.Application.ControlObjects.Song;
-import com.monkeygang.MyTunes.Application.ControlObjects.SongDaoImpl;
+import com.monkeygang.MyTunes.Application.ControlObjects.*;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.collections.FXCollections;
@@ -15,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -25,6 +24,10 @@ public class MyTunesController {
 
 
     Song currentSong;
+    SongDaoImpl SongDao = new SongDaoImpl();
+    PlaylistDaoImpl PLaylistDao = new PlaylistDaoImpl();
+
+
     PlayManager playManager = new PlayManager(this);
 
     //til at checke double click
@@ -36,33 +39,59 @@ public class MyTunesController {
     boolean isdblClicked;
 
     LinkedList<Song> allSongList;
+    LinkedList<Playlist> allPlaylistList;
+
+
+    public MyTunesController() throws SQLException {
+    }
 
 
     @FXML
-    public void initialize() throws IOException, InvalidDataException, UnsupportedTagException {
+    public void initialize() throws IOException, InvalidDataException, UnsupportedTagException, SQLException {
 
 
 
 
         allSongList = new LinkedList<>();
+        allPlaylistList = new LinkedList<>();
+
 
         final File folder = new File("src/main/resources/Songs/");
         listFilesForFolder(folder);
 
-        Playlist playlist0 = new Playlist("Kevin music");
+        Playlist playlist0 = new Playlist(100, "Kevin music");
 
-        playlist0.addSong(allSongList.get(0));
-        playlist0.addSong(allSongList.get(1));
-        playlist0.addSong(allSongList.get(2));
-        playlist0.addSong(allSongList.get(3));
+        allPlaylistList.add(playlist0);
 
+        for (Song song : allSongList){
+            SongDao.addSong(song);
+            //midlertidig linje
+            playlist0.addSong(song);
+        }
+
+        allPlaylistList.add(playlist0);
+
+
+        for (Playlist playlist : allPlaylistList){
+            PLaylistDao.addPlaylist(playlist0);
+        }
+
+        //midlertidige linjer
+        //playlist0.addSong(allSongList.get(0));
+        //playlist0.addSong(allSongList.get(1));
+        //playlist0.addSong(allSongList.get(2));
+        //playlist0.addSong(allSongList.get(3));
+
+        //midlertidig linje
         listviewPlaylist.getItems().add(playlist0);
+
 
 
         playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "1.0", "1.25", "1.50", "1.75", "2.00"));
         playbackSpeed.getSelectionModel().select("1.0");
 
-
+        updateListViewSongs();
+        //updateListViewPlaylists();
 
 
     }
@@ -71,14 +100,13 @@ public class MyTunesController {
         for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
+
             } else {
-                System.out.println(fileEntry);
-                AudioParser.parseMp3(fileEntry);
                 Song song = AudioParser.parseMp3(fileEntry);
-                allSongList.add(song);
 
                 if (!(Objects.equals(song.getTitle(), "error"))){
-                    listviewSongs.getItems().add(song);
+                    allSongList.add(song);
+                    //listviewSongs.getItems().add(song);
                 }
 
 
@@ -95,14 +123,6 @@ public class MyTunesController {
 
     @FXML
     public ComboBox<String> playbackSpeed;
-
-
-
-
-
-
-
-
 
     @FXML
     private Button closeButton;
@@ -125,13 +145,34 @@ public class MyTunesController {
     @FXML
     private ListView<Playlist> listviewPlaylist;
 
+    public void updateListViewPlaylists(){
+        listviewPlaylist.getItems().clear();
+        if (PLaylistDao.getAllPlaylists() != null){
+        listviewPlaylist.getItems().addAll(PLaylistDao.getAllPlaylists());
+        }
+
+    }
+
     @FXML
     private ListView<Song> listviewSongs = new ListView<>();
 
+    public void updateListViewSongs(){
+        listviewSongs.getItems().clear();
+        listviewSongs.getItems().addAll(SongDao.getAllSongs());
 
+    }
 
     @FXML
     private ListView<Song> listviewSongsOnPlaylist;
+
+    public void updateListViewSongsOnPlaylist(MouseEvent event){
+        listviewSongsOnPlaylist.getItems().clear();
+
+
+
+        //listviewSongsOnPlaylist.getItems().addAll(SongDao.getAllSongs());
+
+    }
 
     @FXML
     private Button newPlaylistButton;
@@ -226,6 +267,13 @@ public class MyTunesController {
     @FXML
     void playlistChosen(MouseEvent event) {
 
+        listviewSongsOnPlaylist.getItems().clear();
+
+        for (Song song : listviewPlaylist.getSelectionModel().getSelectedItem().getSongList()){
+            listviewSongsOnPlaylist.getItems().add(song);
+
+        }
+
     }
 
     @FXML
@@ -243,6 +291,7 @@ public class MyTunesController {
 
     }
 
+    /* muligvis deprecated
     @FXML
     void playlistValgt(MouseEvent event) {
         listviewSongsOnPlaylist.getItems().clear();
@@ -253,7 +302,7 @@ public class MyTunesController {
         }
 
 
-    }
+    }*/
 
     @FXML
     void resumePlay(ActionEvent event) {

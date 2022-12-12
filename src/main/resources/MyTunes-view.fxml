@@ -36,7 +36,7 @@
             <GaussianBlur />
          </effect>
       </ImageView>
-      <ImageView fitHeight="522.0" fitWidth="222.0" layoutX="328.0" layoutY="20.0" onMouseClicked="#playlistValgt">
+      <ImageView fitHeight="522.0" fitWidth="222.0" layoutX="328.0" layoutY="20.0" >
          <image>
             <Image url="https://i.imgur.com/Quz6duf.png" />
          </image>

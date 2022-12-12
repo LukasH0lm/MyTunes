@@ -9,12 +9,12 @@ public class Playlist {
 
     LinkedList<Song> songList;
 
-    public Playlist(String name, LinkedList<Song> songList) {
+    public Playlist(int id, String name, LinkedList<Song> songList) {
         this.name = name;
         this.songList = songList;
     }
 
-    public Playlist(String name) {
+    public Playlist(int id, String name) {
         this.name = name;
 
         this.songList = new LinkedList<>();
@@ -42,4 +42,8 @@ public class Playlist {
         this.songList.add(song);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

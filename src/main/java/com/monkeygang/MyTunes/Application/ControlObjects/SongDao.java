@@ -1,6 +1,7 @@
 package com.monkeygang.MyTunes.Application.ControlObjects;
 
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface SongDao {
@@ -9,9 +10,12 @@ public interface SongDao {
 
     public void updateSongs();
 
-    public void deleteSong();
+    void updateSongs(Song[] songs);
 
-    public void addSong(Song song);
+
+    void deleteSong(Song song) throws SQLException;
+
+    public void addSong(Song song) throws SQLException;
 
 
 

@@ -10,6 +10,19 @@ import java.sql.SQLException;
 public class MyTunesApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, SQLException {
+
+        System.out.println(
+                        "<-. (`-')             <-. (`-')_ <-.(`-')  (`-')  _                      (`-')  _ <-. (`-')_            \n" +
+                        "   \\(OO )_      .->      \\( OO) ) __( OO)  ( OO).-/     .->       .->    (OO ).-/    \\( OO) )    .->    \n" +
+                        ",--./  ,-.)(`-')----. ,--./ ,--/ '-'. ,--.(,------. ,--.'  ,-. ,---(`-') / ,---.  ,--./ ,--/  ,---(`-') \n" +
+                        "|   `.'   |( OO).-.  '|   \\ |  | |  .'   / |  .---'(`-')'.'  /'  .-(OO ) | \\ /`.\\ |   \\ |  | '  .-(OO ) \n" +
+                        "|  |'.'|  |( _) | |  ||  . '|  |)|      /)(|  '--. (OO \\    / |  | .-, \\ '-'|_.' ||  . '|  |)|  | .-, \\ \n" +
+                        "|  |   |  | \\|  |)|  ||  |\\    | |  .   '  |  .--'  |  /   /) |  | '.(_/(|  .-.  ||  |\\    | |  | '.(_/ \n" +
+                        "|  |   |  |  '  '-'  '|  | \\   | |  |\\   \\ |  `---. `-/   /`  |  '-'  |  |  | |  ||  | \\   | |  '-'  |  \n" +
+                        "`--'   `--'   `-----' `--'  `--' `--' '--' `------'   `--'     `-----'   `--' `--'`--'  `--'  `-----'   "
+                );
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(MyTunesApplication.class.getResource("/MyTunes-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("πψτμηες");
@@ -17,14 +30,6 @@ public class MyTunesApplication extends Application {
         stage.show();
 
 
-        //UUHUHUHUHHUH Eksempel på afspilning af lyd xD
-        //jeg burde bare have blevet i min gruppe :[
-        //File f = new File("src/main/resources/monke.mp3");
-        //Media m = new Media(f.toURI().toString());
-        //MediaPlayer mp = new MediaPlayer(m);
-        //mp.play();
-
-        new SongDaoImpl();
 
 
     }

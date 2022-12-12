@@ -1,17 +1,25 @@
 package com.monkeygang.MyTunes.Application.ControlObjects;
 
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface PlaylistDao {
+
+
+    void addPlaylist(Playlist playlist) throws SQLException;
+
+
+    void deletePlayList(Playlist playlist) throws SQLException;
 
     public List getAllPlaylists();
 
     public void updatePlaylists();
 
-    public void deleteSong();
 
-    public void addSong();
+    void deleteSongFromPlaylist(Playlist playlist, Song song);
+
+    public void addSongToPlaylist(Playlist playlist, Song song) throws SQLException;
 
 
 }
