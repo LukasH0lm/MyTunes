@@ -64,11 +64,11 @@ public class PlayManager {
     }
 
     public void progressSliderAdjust(){
+        if (this.mp != null){
         this.mp.seek(Duration.seconds(controller.songProgressSlider.getValue()));
+        }
 
     }
-
-
     public void initializeVolumeSlider() {
 
         if (mp != null) {
@@ -79,11 +79,15 @@ public class PlayManager {
 
             });
 
+
+
         }
     }
 
     public void volumeSliderAdjust(){
+        if (this.mp != null){
         mp.setVolume(controller.songVolumeSlider.getValue());
+        }
 
     }
 
