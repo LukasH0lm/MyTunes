@@ -11,7 +11,8 @@ public interface SongDao {
 
     public void deleteSong();
 
-    public void addSong();
+    public void addSong(Song song);
+
 
 
 }
