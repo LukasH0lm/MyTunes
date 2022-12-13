@@ -84,6 +84,15 @@ public class PlayManager {
         }
     }
 
+    public String currentlyPlayingSong(Song song) {
+
+        if (this.mp != null){
+            return  "Song currently playing: " + song.getTitle();
+        }
+        return "Nothing is playing";
+
+    }
+
     public void volumeSliderAdjust(){
         if (this.mp != null){
         mp.setVolume(controller.songVolumeSlider.getValue());
@@ -126,6 +135,7 @@ public class PlayManager {
             initializeVolumeSlider();
             controller.songVolumeSlider.setValue(previousVolumeValue);
             mp.setVolume(previousVolumeValue);
+            controller.updateCurrentlyPlayingLabel();
         }
 
         else if (currentplayState == playState.PLAYING){

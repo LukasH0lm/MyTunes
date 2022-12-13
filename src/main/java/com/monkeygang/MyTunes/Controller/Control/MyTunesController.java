@@ -91,6 +91,8 @@ public class MyTunesController {
         playbackSpeed.getSelectionModel().select("1.0");
 
         updateListViewSongs();
+
+        updateCurrentlyPlayingLabel();
         //updateListViewPlaylists();
 
 
@@ -159,6 +161,13 @@ public class MyTunesController {
     public void updateListViewSongs(){
         listviewSongs.getItems().clear();
         listviewSongs.getItems().addAll(SongDao.getAllSongs());
+
+    }
+
+
+    public void updateCurrentlyPlayingLabel(){
+
+        currentlyPlayingLabel.setText(playManager.currentlyPlayingSong(currentSong));
 
     }
 
