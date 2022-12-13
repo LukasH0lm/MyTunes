@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/7e96f94c-e577-4eaf-863d-531cc914c537/console.sql" dialect="AZURE" />
     <file url="PROJECT" dialect="TSQL" />
   </component>
 </project>

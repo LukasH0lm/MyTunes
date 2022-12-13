@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
@@ -28,34 +29,46 @@
       <Label fx:id="currentlyPlayingLabel" alignment="TOP_CENTER" layoutX="239.0" layoutY="674.0" prefWidth="400.0" text="Song currently playing: Monkeys spinning monkeys" textAlignment="CENTER" />
       <Label fx:id="songLabel" layoutX="725.0" layoutY="6.0" text="Songs" textFill="WHITE" />
       <Button layoutX="550.0" layoutY="66.0" mnemonicParsing="false" onAction="#addSongToPlaylist" text="&lt;-" />
-      <ImageView fitHeight="522.0" fitWidth="288.0" layoutX="10.0" layoutY="23.0">
+      <ImageView disable="true" fitHeight="522.0" fitWidth="288.0" layoutX="10.0" layoutY="23.0">
          <image>
             <Image url="https://i.imgur.com/Quz6duf.png" />
          </image>
          <effect>
             <GaussianBlur />
          </effect>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
       </ImageView>
-      <ImageView fitHeight="522.0" fitWidth="222.0" layoutX="328.0" layoutY="20.0">
+      <ImageView disable="true" fitHeight="522.0" fitWidth="222.0" layoutX="328.0" layoutY="20.0">
          <image>
             <Image url="https://i.imgur.com/Quz6duf.png" />
          </image>
          <effect>
             <GaussianBlur />
          </effect>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
       </ImageView>
-      <ImageView fitHeight="522.0" fitWidth="327.0" layoutX="581.0" layoutY="20.0">
+      <ImageView disable="true" fitHeight="522.0" fitWidth="327.0" layoutX="581.0" layoutY="20.0">
          <image>
             <Image url="https://i.imgur.com/Quz6duf.png" />
          </image>
          <effect>
             <GaussianBlur />
          </effect>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
       </ImageView>
-      <ImageView fitHeight="90.0" fitWidth="83.0" layoutX="10.0" layoutY="554.0" preserveRatio="true">
+      <ImageView disable="true" fitHeight="90.0" fitWidth="83.0" layoutX="10.0" layoutY="554.0" preserveRatio="true">
          <image>
             <Image url="https://i.imgur.com/Quz6duf.png" />
          </image>
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor>
       </ImageView>
       <Slider fx:id="songProgressSlider" layoutX="22.0" layoutY="700.0" onMouseDragged="#progressSliderOnMousePressed" onMousePressed="#progressSliderOnMousePressed" prefHeight="36.0" prefWidth="834.0" />
       <ComboBox fx:id="playbackSpeed" layoutX="540.0" layoutY="645.0" onAction="#changeSpeed" prefHeight="25.0" prefWidth="85.0" />

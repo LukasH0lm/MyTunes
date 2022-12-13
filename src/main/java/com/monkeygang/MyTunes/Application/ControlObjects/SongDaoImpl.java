@@ -169,7 +169,6 @@ public class SongDaoImpl implements SongDao {
 
                 ps2.executeUpdate();
                 System.out.println(song.getTitle() + " has been added to database");
-                System.out.println();
 
 
             } catch (SQLException e) {

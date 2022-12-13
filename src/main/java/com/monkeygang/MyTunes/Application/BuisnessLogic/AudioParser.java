@@ -27,12 +27,12 @@ public class AudioParser {
 
         Mp3File mp3file = new Mp3File(song.getPath());
         if (mp3file.hasId3v1Tag()) {
-            System.out.println("file has id3v1Tag");
+            //System.out.println("file has id3v1Tag");
 
         }
 
         if (mp3file.hasCustomTag()) {
-            System.out.println("file has custom tag");
+            //System.out.println("file has custom tag");
 
         }
 
@@ -47,8 +47,8 @@ public class AudioParser {
             Image albumCover;
 
             if (albumImageData != null) {
-                System.out.println("Have album image data, length: " + albumImageData.length + " bytes");
-                System.out.println("Album image mime type: " + id3v2Tag.getAlbumImageMimeType());
+                //System.out.println("Have album image data, length: " + albumImageData.length + " bytes");
+                //System.out.println("Album image mime type: " + id3v2Tag.getAlbumImageMimeType());
                 ByteArrayInputStream bis = new ByteArrayInputStream(albumImageData);
 
                 albumCover = new Image(bis);
@@ -57,7 +57,7 @@ public class AudioParser {
                 albumCover = null;
             }
             rollingId++;
-            System.out.println("Parsed Song : " + id3v2Tag.getTitle() + id3v2Tag.getArtist() + id3v2Tag.getGenreDescription());
+            System.out.println("Parsed Song : " + id3v2Tag.getTitle() + " " + id3v2Tag.getArtist() + " " + id3v2Tag.getGenreDescription());
             // converts the title so that Song.title can be relied upon in plating the file
             String songTitle = song.getName().substring(0, song.getName().length() - 4);
             return new Song(rollingId, songTitle, id3v2Tag.getArtist(), id3v2Tag.getAlbum(), id3v2Tag.getGenreDescription(),albumCover);
@@ -69,16 +69,7 @@ public class AudioParser {
     }
 
 
-    public static void ByteArrayToImage(String args[]) throws Exception {
-        BufferedImage bImage = ImageIO.read(new File("sample.jpg"));
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(bImage, "jpg", bos);
-        byte[] data = bos.toByteArray();
-        ByteArrayInputStream bis = new ByteArrayInputStream(data);
-        BufferedImage bImage2 = ImageIO.read(bis);
-        ImageIO.write(bImage2, "jpg", new File("output.jpg"));
-        System.out.println("image created");
-    }
+
 }
 
 

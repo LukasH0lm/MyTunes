@@ -107,7 +107,7 @@ public class MyTunesController {
 
                 if (song != null) {
                     allSongList.add(song);
-                    System.out.println("Song in allSongs cover: " + allSongList.getLast().getAlbumCover());
+                    //System.out.println("Song in allSongs cover: " + allSongList.getLast().getAlbumCover());
                     //listviewSongs.getItems().add(song);
                 }
 

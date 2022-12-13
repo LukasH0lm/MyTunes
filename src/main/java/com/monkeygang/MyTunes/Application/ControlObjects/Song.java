@@ -28,7 +28,6 @@ public class Song {
         this.album = album;
         this.genre = genre;
         this.albumCover = albumCover;
-        System.out.println(this.albumCover);
 
 
 
