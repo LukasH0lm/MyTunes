@@ -60,7 +60,6 @@ public class PlaylistDaoImpl implements PlaylistDao {
                 ps2.setInt(3, 101);
 
 
-
                 ps2.executeUpdate();
                 System.out.println(playlist.getName() + " has been added to database");
                 System.out.println();
@@ -87,7 +86,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
         String SQLSongTitle = "'%s'".formatted(playlist.getName());
 
-        PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";" );
+        PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";");
 
     }
 
@@ -102,7 +101,6 @@ public class PlaylistDaoImpl implements PlaylistDao {
             while (rs.next()) {
                 String id = rs.getString(1);
                 String name = rs.getString(2);
-
 
 
                 playlist = new Playlist(Integer.parseInt(id), name);
@@ -131,16 +129,13 @@ public class PlaylistDaoImpl implements PlaylistDao {
     public void addSongToPlaylist(Playlist playlist, Song song) throws SQLException {
 
 
-
         playlist.addSong(song);
 
         int songID = SongDaoImpl.getSongID(song);
         int playlistID = PlaylistDaoImpl.getPlaylistID(playlist);
 
-        PreparedStatement ps = con.prepareStatement("UPDATE Playlists set SongID="+ songID +" WHERE PlaylistID="+ playlistID +";");
+        PreparedStatement ps = con.prepareStatement("INSERT INTO SongsInPlaylist VALUES (SongID, PlaylistID);");
         ResultSet rs = ps.executeQuery();
-
-
 
 
     }

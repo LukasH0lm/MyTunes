@@ -5,6 +5,7 @@ module com.monkeygang.MyTunes {
     requires java.xml;
     requires mp3agic;
     requires java.sql;
+    requires java.desktop;
 
 
     exports com.monkeygang.MyTunes.Controller.Control;

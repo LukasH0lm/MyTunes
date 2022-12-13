@@ -1,5 +1,12 @@
 package com.monkeygang.MyTunes.Application.ControlObjects;
 
+import com.monkeygang.MyTunes.Application.BuisnessLogic.AudioParser;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import javafx.scene.image.Image;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -45,22 +52,39 @@ public class SongDaoImpl implements SongDao {
             ResultSet rs = ps.executeQuery();
 
             Song song;
+            Image albumCover;
             while (rs.next()) {
+                albumCover = null;
                 String id = rs.getString(1);
                 String title = rs.getString(2);
                 String artist = rs.getString(3);
                 String album = rs.getString(4);
                 String genre = rs.getString(5);
 
+                song = AudioParser.parseMp3(new File("src/main/resources/Songs/" + title + ".mp3"));
 
-                song = new Song(Integer.parseInt(id), title, artist, album, genre);
+                //for at undgå nullPointerException, både song og eller albumcover can være null
+                if (song != null) {
+                    if (song.getAlbumCover() != null) {
+                        albumCover = song.getAlbumCover();
+                    }
+                }
+
+                song = new Song(Integer.parseInt(id), title, artist, album, genre,albumCover);
                 songs.add(song);
 
-                System.out.println(songs);
+
             }
+            System.out.println(songs);
 
         } catch (SQLException e) {
             System.err.println("can not access records");
+        } catch (InvalidDataException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedTagException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return songs;
     }
@@ -95,7 +119,7 @@ public class SongDaoImpl implements SongDao {
 
         String SQLSongTitle = "'%s'".formatted(song.title);
 
-        PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";" );
+        PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";");
 
 
     }

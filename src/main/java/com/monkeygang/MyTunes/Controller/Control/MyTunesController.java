@@ -9,6 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.File;
@@ -18,9 +20,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 
-
 public class MyTunesController {
-
 
 
     Song currentSong;
@@ -40,7 +40,7 @@ public class MyTunesController {
 
     LinkedList<Song> allSongList;
     LinkedList<Playlist> allPlaylistList;
-
+    Image songNote;
 
     public MyTunesController() throws SQLException {
     }
@@ -48,8 +48,6 @@ public class MyTunesController {
 
     @FXML
     public void initialize() throws IOException, InvalidDataException, UnsupportedTagException, SQLException {
-
-
 
 
         allSongList = new LinkedList<>();
@@ -63,7 +61,7 @@ public class MyTunesController {
 
         allPlaylistList.add(playlist0);
 
-        for (Song song : allSongList){
+        for (Song song : allSongList) {
             SongDao.addSong(song);
             //midlertidig linje
             playlist0.addSong(song);
@@ -72,7 +70,7 @@ public class MyTunesController {
         allPlaylistList.add(playlist0);
 
 
-        for (Playlist playlist : allPlaylistList){
+        for (Playlist playlist : allPlaylistList) {
             PLaylistDao.addPlaylist(playlist0);
         }
 
@@ -86,14 +84,15 @@ public class MyTunesController {
         listviewPlaylist.getItems().add(playlist0);
 
 
-
-        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75" , "1.0", "1.25", "1.50", "1.75", "2.00"));
+        playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75", "1.0", "1.25", "1.50", "1.75", "2.00"));
         playbackSpeed.getSelectionModel().select("1.0");
 
         updateListViewSongs();
 
         updateCurrentlyPlayingLabel();
-        //updateListViewPlaylists();
+
+        songNote = new Image("https://pngimg.com/uploads/music_notes/music_notes_PNG93.png");
+        AlbumImageView.setImage(songNote);
 
 
     }
@@ -106,8 +105,9 @@ public class MyTunesController {
             } else {
                 Song song = AudioParser.parseMp3(fileEntry);
 
-                if (!(Objects.equals(song.getTitle(), "error"))){
+                if (song != null) {
                     allSongList.add(song);
+                    System.out.println("Song in allSongs cover: " + allSongList.getLast().getAlbumCover());
                     //listviewSongs.getItems().add(song);
                 }
 
@@ -154,10 +154,10 @@ public class MyTunesController {
     @FXML
     private ListView<Playlist> listviewPlaylist;
 
-    public void updateListViewPlaylists(){
+    public void updateListViewPlaylists() {
         listviewPlaylist.getItems().clear();
-        if (PLaylistDao.getAllPlaylists() != null){
-        listviewPlaylist.getItems().addAll(PLaylistDao.getAllPlaylists());
+        if (PLaylistDao.getAllPlaylists() != null) {
+            listviewPlaylist.getItems().addAll(PLaylistDao.getAllPlaylists());
         }
 
     }
@@ -165,14 +165,14 @@ public class MyTunesController {
     @FXML
     private ListView<Song> listviewSongs = new ListView<>();
 
-    public void updateListViewSongs(){
+    public void updateListViewSongs() {
         listviewSongs.getItems().clear();
         listviewSongs.getItems().addAll(SongDao.getAllSongs());
 
     }
 
 
-    public void updateCurrentlyPlayingLabel(){
+    public void updateCurrentlyPlayingLabel() {
 
         currentlyPlayingLabel.setText(playManager.currentlyPlayingSong(currentSong));
 
@@ -181,15 +181,17 @@ public class MyTunesController {
     @FXML
     private ListView<Song> listviewSongsOnPlaylist;
 
-    public void updateListViewSongsOnPlaylist(MouseEvent event){
+    public void updateListViewSongsOnPlaylist(MouseEvent event) {
         listviewSongsOnPlaylist.getItems().clear();
-
 
 
         //listviewSongsOnPlaylist.getItems().addAll(SongDao.getAllSongs());
 
     }
 
+
+    @FXML
+    private ImageView AlbumImageView;
     @FXML
     private Button newPlaylistButton;
 
@@ -222,7 +224,6 @@ public class MyTunesController {
 
     @FXML
     private Label songOnPlaylistLabel;
-
 
 
     @FXML
@@ -285,7 +286,7 @@ public class MyTunesController {
 
         listviewSongsOnPlaylist.getItems().clear();
 
-        for (Song song : listviewPlaylist.getSelectionModel().getSelectedItem().getSongList()){
+        for (Song song : listviewPlaylist.getSelectionModel().getSelectedItem().getSongList()) {
             listviewSongsOnPlaylist.getItems().add(song);
 
         }
@@ -321,10 +322,20 @@ public class MyTunesController {
     }*/
 
     @FXML
-    void resumePlay(ActionEvent event) {
+    void resumePlay(/*ActionEvent event*/) {
 
 
         playManager.playSong(currentSong);
+
+        if (currentSong.getAlbumCover() != null && currentSong.getAlbumCover().getWidth() > 0){
+
+            System.out.println("changing album cover");
+            AlbumImageView.setImage(currentSong.getAlbumCover());
+
+        }else{
+            AlbumImageView.setImage(songNote);
+            System.out.println("Song dosen't have an album cover");
+        }
 
     }
 
@@ -334,22 +345,22 @@ public class MyTunesController {
     }
 
     @FXML
-    void songDrag(){
+    void songDrag() {
         drag_Flag = true;
     }
+
     @FXML
     void songChosen(MouseEvent event) {
 
         currentSong = listviewSongs.getSelectionModel().getSelectedItem();
 
 
+       /* if (doubleClickTester(event)) {
+            playManager.playSong(currentSong, true);
+        }*/
 
-
-        if (doubleClickTester(event)){
-            playManager.playSong(currentSong,true);
-        }
-
-
+        resumePlay(/*event*/);
+        //playManager.playSong(currentSong, true);
 
 
     }
@@ -360,10 +371,8 @@ public class MyTunesController {
         currentSong = listviewSongsOnPlaylist.getSelectionModel().getSelectedItem();
 
 
-
-
-        if (doubleClickTester(event)){
-            playManager.playSong(currentSong,true);
+        if (doubleClickTester(event)) {
+            playManager.playSong(currentSong, true);
         }
 
     }
@@ -374,44 +383,34 @@ public class MyTunesController {
     }
 
 
-
-
-
-
-
-    public boolean doubleClickTester(MouseEvent event){
+    public boolean doubleClickTester(MouseEvent event) {
 
         if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED) && !drag_Flag) {
             long diff = 0;
-            if(time1==0 || System.currentTimeMillis() - time1 > 1000)
-                time1=System.currentTimeMillis();
+            if (time1 == 0 || System.currentTimeMillis() - time1 > 1000)
+                time1 = System.currentTimeMillis();
             else
-                time2=System.currentTimeMillis();
-            if(time1!=0 && time2!=0){
-                diff=time2-time1;
+                time2 = System.currentTimeMillis();
+            if (time1 != 0 && time2 != 0) {
+                diff = time2 - time1;
                 time1 = 0;
                 time2 = 0;
             }
 
             System.out.println("time between clicks in ms: " + diff);
-            if( diff>0 && diff <= 300)
-            {
-                isdblClicked=true;
+            if (diff > 0 && diff <= 300) {
+                isdblClicked = true;
 
-            }
-            else
-            {
-                isdblClicked=false;
+            } else {
+                isdblClicked = false;
 
             }
 
-            System.out.println("is double Click = "+isdblClicked);
+            System.out.println("is double Click = " + isdblClicked);
             return isdblClicked;
 
 
-
-
-        }else{
+        } else {
             drag_Flag = false;
             return false;
 
@@ -419,7 +418,7 @@ public class MyTunesController {
 
     }
 
-    public void changePlayButtonIcon(PlayManager.playState state){
+    public void changePlayButtonIcon(PlayManager.playState state) {
 
         /*
         playSong() returnere en boolean der svarer til om den spiller en sang:
@@ -429,24 +428,22 @@ public class MyTunesController {
          */
 
 
-
-        if (state == PlayManager.playState.PLAYING){
+        if (state == PlayManager.playState.PLAYING) {
             playButton.setText("||");
-        }else{
+        } else {
             playButton.setText(">");
         }
 
     }
 
     @FXML
-    public void changeSpeed(){
+    public void changeSpeed() {
 
         playManager.changePlaybackSpeed(playbackSpeed.getSelectionModel().getSelectedItem());
         System.out.println(playbackSpeed.getSelectionModel().getSelectedItem());
 
 
     }
-
 
 
 }

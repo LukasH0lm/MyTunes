@@ -1,8 +1,9 @@
 package com.monkeygang.MyTunes.Application.BuisnessLogic;
+
 import com.monkeygang.MyTunes.Application.ControlObjects.Song;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+
+import java.io.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 import com.mpatric.mp3agic.ID3v2;
@@ -10,6 +11,11 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.ID3v23Tag;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import javafx.scene.image.Image;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 public class AudioParser {
 
@@ -37,18 +43,42 @@ public class AudioParser {
 
 
             byte[] albumImageData = id3v2Tag.getAlbumImage();
+            rollingId++;
+            Image albumCover;
 
             if (albumImageData != null) {
                 System.out.println("Have album image data, length: " + albumImageData.length + " bytes");
                 System.out.println("Album image mime type: " + id3v2Tag.getAlbumImageMimeType());
+                ByteArrayInputStream bis = new ByteArrayInputStream(albumImageData);
+
+                albumCover = new Image(bis);
+
+            }else{
+                albumCover = null;
             }
             rollingId++;
             System.out.println("Parsed Song : " + id3v2Tag.getTitle() + id3v2Tag.getArtist() + id3v2Tag.getGenreDescription());
-            return new Song(rollingId,id3v2Tag.getTitle(),id3v2Tag.getArtist(), id3v2Tag.getAlbum(), id3v2Tag.getGenreDescription());
+            // converts the title so that Song.title can be relied upon in plating the file
+            String songTitle = song.getName().substring(0, song.getName().length() - 4);
+            return new Song(rollingId, songTitle, id3v2Tag.getArtist(), id3v2Tag.getAlbum(), id3v2Tag.getGenreDescription(),albumCover);
 
 
         }
-        return new Song(-1,"test","test","test","test");
+        return null;
 
     }
+
+
+    public static void ByteArrayToImage(String args[]) throws Exception {
+        BufferedImage bImage = ImageIO.read(new File("sample.jpg"));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(bImage, "jpg", bos);
+        byte[] data = bos.toByteArray();
+        ByteArrayInputStream bis = new ByteArrayInputStream(data);
+        BufferedImage bImage2 = ImageIO.read(bis);
+        ImageIO.write(bImage2, "jpg", new File("output.jpg"));
+        System.out.println("image created");
+    }
 }
+
+

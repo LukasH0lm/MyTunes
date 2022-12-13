@@ -12,9 +12,9 @@ public class PlayManager {
 
 
     public enum playState {
-            PLAYING,
-            PAUSED,
-            STOPPED
+        PLAYING,
+        PAUSED,
+        STOPPED
     }
 
     playState currentplayState = playState.STOPPED;
@@ -33,16 +33,69 @@ public class PlayManager {
     boolean doubleClicked;
 
 
-
-    public PlayManager(MyTunesController controller){
+    public PlayManager(MyTunesController controller) {
 
         this.controller = controller;
 
 
+    }
 
+
+    public void playSong(Song song, boolean... doubleClickCheck) {
+
+        doubleClicked = doubleClickCheck.length != 0;
+
+        System.out.println("Play manager input song: " + song);
+        if (previousSong != song) {
+            if (this.mp != null) {
+                this.mp.stop();
+                previousVolumeValue = mp.volumeProperty().getValue();
+
+            }
+
+
+            currentplayState = playState.STOPPED;
+        }
+        previousSong = song;
+
+
+        if (currentplayState == playState.STOPPED) {
+            String filepath = "src/main/resources/Songs/" + song.getTitle() + ".mp3";
+            File f = new File(filepath);
+            Media m = new Media(f.toURI().toString());
+            this.mp = new MediaPlayer(m);
+            mp.play();
+            currentplayState = playState.PLAYING;
+            controller.playbackSpeed.getSelectionModel().select("1.0");
+            initializeProgressSlider();
+            initializeVolumeSlider();
+            currentTimeInSong();
+            controller.songVolumeSlider.setValue(previousVolumeValue);
+            mp.setVolume(previousVolumeValue);
+            controller.updateCurrentlyPlayingLabel();
+            //controller.updateAlbumPicture();
+        } else if (currentplayState == playState.PLAYING) {
+            if (doubleClicked) {
+                this.mp.stop();
+                currentplayState = playState.STOPPED;
+                playSong(song);
+            }
+
+            System.out.println("pausing");
+            this.mp.pause();
+            currentplayState = playState.PAUSED;
+
+        } else if (currentplayState == playState.PAUSED) {
+            this.mp.play();
+            currentplayState = playState.PLAYING;
+
+        }
+
+        controller.changePlayButtonIcon(currentplayState);
 
 
     }
+
 
     public void currentTimeInSong() {
 
@@ -63,21 +116,22 @@ public class PlayManager {
 
         if (this.mp != null) {
 
-                this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
-                    controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
-                    this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) ->
-                            controller.songProgressSlider.setValue(newTime.toSeconds()));
+            this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
+                this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) ->
+                        controller.songProgressSlider.setValue(newTime.toSeconds()));
 
-                });
+            });
         }
     }
 
-    public void progressSliderAdjust(){
-        if (this.mp != null){
-        this.mp.seek(Duration.seconds(controller.songProgressSlider.getValue()));
+    public void progressSliderAdjust() {
+        if (this.mp != null) {
+            this.mp.seek(Duration.seconds(controller.songProgressSlider.getValue()));
         }
 
     }
+
     public void initializeVolumeSlider() {
 
         if (mp != null) {
@@ -89,99 +143,37 @@ public class PlayManager {
             });
 
 
-
         }
     }
 
     public String currentlyPlayingSong(Song song) {
 
-        if (this.mp != null){
-            return  "Song currently playing: " + song.getTitle();
+        if (this.mp != null) {
+            return "Song currently playing: " + song.getTitle();
         }
         return "Nothing is playing";
 
     }
 
-    public void volumeSliderAdjust(){
-        if (this.mp != null){
-        mp.setVolume(controller.songVolumeSlider.getValue());
+    public void volumeSliderAdjust() {
+        if (this.mp != null) {
+            mp.setVolume(controller.songVolumeSlider.getValue());
         }
 
     }
 
 
-
-    public void playSong(Song song, boolean... doubleClickCheck){
-
-        doubleClicked = doubleClickCheck.length != 0;
-
-        System.out.println("Play manager input song: " + song);
-        if (previousSong != song){
-            if(this.mp != null){
-                this.mp.stop();
-                previousVolumeValue = mp.volumeProperty().getValue();
-
-            }
-
-
-            currentplayState = playState.STOPPED;
-        }
-        previousSong = song;
-
-
-        if (currentplayState == playState.STOPPED){
-            String filepath = "src/main/resources/Songs/" + song.getTitle() + ".mp3";
-            File f = new File(filepath);
-            Media m = new Media(f.toURI().toString());
-            this.mp = new MediaPlayer(m);
-            mp.play();
-            currentplayState = playState.PLAYING;
-            controller.playbackSpeed.getSelectionModel().select("1.0");
-            initializeProgressSlider();
-            initializeVolumeSlider();
-            currentTimeInSong();
-            controller.songVolumeSlider.setValue(previousVolumeValue);
-            mp.setVolume(previousVolumeValue);
-            controller.updateCurrentlyPlayingLabel();
-        }
-
-        else if (currentplayState == playState.PLAYING){
-            if (doubleClicked){
-                this.mp.stop();
-                currentplayState = playState.STOPPED;
-                playSong(song);
-            }
-
-            System.out.println("pausing");
-            this.mp.pause();
-            currentplayState = playState.PAUSED;
-
-        }
-
-        else if (currentplayState == playState.PAUSED){
-            this.mp.play();
-            currentplayState = playState.PLAYING;
-
-        }
-
-        controller.changePlayButtonIcon(currentplayState);
-
-
-
-
-    }
-
-    public playState getCurrentplayState(){
+    public playState getCurrentplayState() {
         return currentplayState;
     }
 
-    public Song getPreviousSong(){
+    public Song getPreviousSong() {
         return previousSong;
     }
 
     public void changePlaybackSpeed(String selectedItem) {
-        if (this.mp != null){
-            this.mp.setRate(Double.parseDouble( selectedItem));
+        if (this.mp != null) {
+            this.mp.setRate(Double.parseDouble(selectedItem));
         }
 
 
