@@ -44,11 +44,20 @@ public class PlayManager {
 
     }
 
+    public void currentTimeInSong() {
 
 
+        if (this.mp != null) {
 
+            this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                controller.songTotalDuration.setText(String.valueOf(String.format("%.2f", this.mp.getTotalDuration().toMinutes())));
+                this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) ->
+                        controller.currentTimeInSong.setText(String.valueOf(String.format("%.2f", newTime.toMinutes()) + " /")));
 
+            });
 
+        }
+    }
 
     public void initializeProgressSlider() {
 
@@ -126,13 +135,11 @@ public class PlayManager {
             Media m = new Media(f.toURI().toString());
             this.mp = new MediaPlayer(m);
             mp.play();
-
-
-
             currentplayState = playState.PLAYING;
             controller.playbackSpeed.getSelectionModel().select("1.0");
             initializeProgressSlider();
             initializeVolumeSlider();
+            currentTimeInSong();
             controller.songVolumeSlider.setValue(previousVolumeValue);
             mp.setVolume(previousVolumeValue);
             controller.updateCurrentlyPlayingLabel();

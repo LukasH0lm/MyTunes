@@ -132,6 +132,13 @@ public class MyTunesController {
     @FXML
     private Label currentlyPlayingLabel;
 
+
+    @FXML
+    public Label currentTimeInSong;
+
+    @FXML
+    public Label songTotalDuration;
+
     @FXML
     private Button deletePlaylistButton;
 
@@ -439,6 +446,7 @@ public class MyTunesController {
 
 
     }
+
 
 
 }
