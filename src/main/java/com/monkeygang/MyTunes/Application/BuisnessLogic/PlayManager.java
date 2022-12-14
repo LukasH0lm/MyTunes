@@ -97,16 +97,31 @@ public class PlayManager {
     }
 
 
+
+
+    public static int[] splitTime(int seconds) {
+
+        int minutes = seconds / 60;
+        seconds = seconds - (minutes * 60);
+
+        return new int[]{minutes, seconds};
+    }
+
     public void currentTimeInSong() {
 
 
         if (this.mp != null) {
 
             this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
-                controller.songTotalDuration.setText(String.valueOf(String.format("%.2f", this.mp.getTotalDuration().toMinutes())));
-                this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) ->
-                        controller.currentTimeInSong.setText(String.valueOf(String.format("%.2f", newTime.toMinutes()) + " /")));
+                int songDuration = (int) this.mp.getTotalDuration().toSeconds();
+                int[] split = splitTime(songDuration);
+                controller.songTotalDuration.setText(split[0] + "," +  split[1]);
+            });
 
+            this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) -> {
+                int currentTime = (int) this.mp.getCurrentTime().toSeconds();
+                int[] split = splitTime(currentTime);
+                controller.currentTimeInSong.setText(split[0] + "," +  split[1] + " /");
             });
 
         }

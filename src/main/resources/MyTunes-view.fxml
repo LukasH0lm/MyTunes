@@ -73,8 +73,8 @@
       <Slider fx:id="songProgressSlider" layoutX="22.0" layoutY="700.0" onMouseDragged="#progressSliderOnMousePressed" onMousePressed="#progressSliderOnMousePressed" prefHeight="36.0" prefWidth="834.0" />
       <ComboBox fx:id="playbackSpeed" layoutX="540.0" layoutY="645.0" onAction="#changeSpeed" prefHeight="25.0" prefWidth="85.0" />
       <Slider fx:id="songVolumeSlider" layoutX="655.0" layoutY="650.0" max="1.0" onMouseDragged="#volumeSliderOnMousePressed" onMousePressed="#volumeSliderOnMousePressed" value="1.0" />
-      <Label fx:id="currentTimeInSong" layoutX="404.0" layoutY="692.0" text="0.00 /" />
-      <Label fx:id="songTotalDuration" layoutX="438.0" layoutY="692.0" text="0.00" />
+      <Label fx:id="currentTimeInSong" layoutX="404.0" layoutY="692.0" text="0,00 /" />
+      <Label fx:id="songTotalDuration" layoutX="438.0" layoutY="692.0" text="0,00" />
       <ImageView fx:id="AlbumImageView" fitHeight="120.0" fitWidth="120.0" layoutX="130.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true" />
       <TableView fx:id="TableviewPlaylists" layoutX="8.0" layoutY="35.0" prefHeight="340.0" prefWidth="262.0">
         <columns>
