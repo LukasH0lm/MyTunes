@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -53,6 +54,12 @@ public class MyTunesController {
         allSongList = new LinkedList<>();
         allPlaylistList = new LinkedList<>();
 
+        TableviewSongColSong.setCellValueFactory(
+                new PropertyValueFactory<>("title")
+        );
+        TableviewSongColArtist.setCellValueFactory(
+                new PropertyValueFactory<>("artist")
+        );
 
         final File folder = new File("src/main/resources/Songs/");
         listFilesForFolder(folder);
@@ -81,13 +88,17 @@ public class MyTunesController {
         //playlist0.addSong(allSongList.get(3));
 
         //midlertidig linje
-        listviewPlaylist.getItems().add(playlist0);
+        //listviewPlaylist.getItems().add(playlist0);
+        TableviewPlaylists.getItems().add(playlist0);
 
 
         playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75", "1.0", "1.25", "1.50", "1.75", "2.00"));
         playbackSpeed.getSelectionModel().select("1.0");
 
-        updateListViewSongs();
+        //updateListViewSongs();
+
+        updateTableviewSongs();
+
 
         updateCurrentlyPlayingLabel();
 
@@ -115,6 +126,23 @@ public class MyTunesController {
             }
         }
     }
+
+
+    @FXML
+    private TableView<Playlist> TableviewPlaylists;
+
+    @FXML
+    private TableView<Song> TableviewSongs;
+
+    @FXML
+    private TableColumn<Song, String> TableviewSongColArtist;
+
+    @FXML
+    private TableColumn<Song, String> TableviewSongColSong;
+
+
+    @FXML
+    private TableView<Song> TableviewSongsOnPlaylists;
 
     @FXML
     public Slider songProgressSlider;
@@ -160,6 +188,7 @@ public class MyTunesController {
             listviewPlaylist.getItems().addAll(PLaylistDao.getAllPlaylists());
         }
 
+
     }
 
     @FXML
@@ -169,6 +198,19 @@ public class MyTunesController {
         listviewSongs.getItems().clear();
         listviewSongs.getItems().addAll(SongDao.getAllSongs());
 
+
+    }
+
+    @FXML
+    public void updateTableviewSongs() {
+        TableviewSongs.getItems().clear();
+
+        for (Song song : SongDao.getAllSongs()){
+            TableviewSongs.getItems().add(song);
+
+        }
+
+        //TableviewSongs.getItems().addAll(SongDao.getAllSongs());
     }
 
 
@@ -183,6 +225,14 @@ public class MyTunesController {
 
     public void updateListViewSongsOnPlaylist(MouseEvent event) {
         listviewSongsOnPlaylist.getItems().clear();
+
+
+        //listviewSongsOnPlaylist.getItems().addAll(SongDao.getAllSongs());
+
+    }
+
+    public void updateTableviewSongsOnPlaylist(MouseEvent event) {
+        TableviewSongsOnPlaylists.getItems().clear();
 
 
         //listviewSongsOnPlaylist.getItems().addAll(SongDao.getAllSongs());
@@ -291,6 +341,12 @@ public class MyTunesController {
 
         }
 
+        TableviewPlaylists.getItems().clear();
+        for (Song song : listviewPlaylist.getSelectionModel().getSelectedItem().getSongList()) {
+            listviewSongsOnPlaylist.getItems().add(song);
+
+        }
+
     }
 
     @FXML
@@ -327,12 +383,12 @@ public class MyTunesController {
 
         playManager.playSong(currentSong);
 
-        if (currentSong.getAlbumCover() != null && currentSong.getAlbumCover().getWidth() > 0){
+        if (currentSong.getAlbumCover() != null && currentSong.getAlbumCover().getWidth() > 0) {
 
             System.out.println("changing album cover");
             AlbumImageView.setImage(currentSong.getAlbumCover());
 
-        }else{
+        } else {
             AlbumImageView.setImage(songNote);
             System.out.println("Song dosen't have an album cover");
         }
@@ -352,14 +408,15 @@ public class MyTunesController {
     @FXML
     void songChosen(MouseEvent event) {
 
-        currentSong = listviewSongs.getSelectionModel().getSelectedItem();
+        //currentSong = listviewSongs.getSelectionModel().getSelectedItem();
+        currentSong = TableviewSongs.getSelectionModel().getSelectedItem();
 
 
-       /* if (doubleClickTester(event)) {
-            playManager.playSong(currentSong, true);
-        }*/
+        if (doubleClickTester(event)) {
+            resumePlay(/*event*/);
+        }
 
-        resumePlay(/*event*/);
+        //resumePlay(/*event*/);
         //playManager.playSong(currentSong, true);
 
 
@@ -368,11 +425,11 @@ public class MyTunesController {
     @FXML
     void songOnPlaylistChosen(MouseEvent event) {
 
-        currentSong = listviewSongsOnPlaylist.getSelectionModel().getSelectedItem();
-
+        //currentSong = listviewSongsOnPlaylist.getSelectionModel().getSelectedItem();
+        TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
 
         if (doubleClickTester(event)) {
-            playManager.playSong(currentSong, true);
+            resumePlay();
         }
 
     }
