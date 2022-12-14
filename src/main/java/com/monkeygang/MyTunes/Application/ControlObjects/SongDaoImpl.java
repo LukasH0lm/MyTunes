@@ -120,6 +120,7 @@ public class SongDaoImpl implements SongDao {
         String SQLSongTitle = "'%s'".formatted(song.title);
 
         PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";");
+        ps2.executeUpdate();
 
 
     }

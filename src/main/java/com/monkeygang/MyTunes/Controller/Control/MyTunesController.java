@@ -7,15 +7,24 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Objects;
@@ -274,30 +283,15 @@ public class MyTunesController {
 
 
     @FXML
-    void DeletePlaylist(ActionEvent event) {
+    void DeletePlaylist(MouseEvent event) {
 
     }
 
     @FXML
-    void addSongToPlaylist(ActionEvent event) {
+    void addSongToPlaylist(MouseEvent event) {
 
     }
 
-
-    @FXML
-    void deleteSong(ActionEvent event) {
-
-    }
-
-    @FXML
-    void editPlaylist(ActionEvent event) {
-
-    }
-
-    @FXML
-    void editSong(ActionEvent event) {
-
-    }
 
     @FXML
     void progressSliderOnMousePressed(MouseEvent event) {
@@ -313,20 +307,6 @@ public class MyTunesController {
 
     }
 
-    @FXML
-    void newPlaylist(ActionEvent event) {
-
-    }
-
-    @FXML
-    void newSong(ActionEvent event) {
-
-    }
-
-    @FXML
-    void playBack(ActionEvent event) {
-
-    }
 
     @FXML
     void playlistChosen(MouseEvent event) {
@@ -339,21 +319,6 @@ public class MyTunesController {
             TableviewSongsOnPlaylists.getItems().add(song);
 
         }
-
-    }
-
-    @FXML
-    void playlistSongDelete(ActionEvent event) {
-
-    }
-
-    @FXML
-    void playlistSongDown(ActionEvent event) {
-
-    }
-
-    @FXML
-    void playlistSongUp(ActionEvent event) {
 
     }
 
@@ -435,7 +400,7 @@ public class MyTunesController {
             }
 
             System.out.println("time between clicks in ms: " + diff);
-            if (diff > 0 && diff <= 300) {
+            if (diff > 0 && diff <= 500) {
                 isdblClicked = true;
 
             } else {
@@ -484,9 +449,37 @@ public class MyTunesController {
 
 
     @FXML
-    void newSong(MouseEvent event) {
+    void newSong(MouseEvent event) throws InvalidDataException, UnsupportedTagException, IOException, SQLException {
 
+        System.out.println("adding new song");
+        Stage primaryStage = new Stage();
+        primaryStage.setTitle("Choose song to add");
+
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Sound Files", "*.mp3")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null) {
+
+
+            Path copied = Paths.get("src/main/resources/Songs/" + selectedFile.getName());
+            Path originalPath = selectedFile.toPath();
+            Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+
+
+            File copiedFile = new File(copied.toUri());
+
+            Song newSong = AudioParser.parseMp3(copiedFile);
+            SongDao.addSong(newSong);
+            allSongList.add(newSong);
+            updateTableviewSongs();
+        }
     }
+
 
     @FXML
     void editSong(MouseEvent event) {
@@ -494,9 +487,27 @@ public class MyTunesController {
     }
 
     @FXML
-    void deleteSong(MouseEvent event) {
+    void deleteSong(MouseEvent event) throws SQLException {
+        Song songToDelete;
+        songToDelete = TableviewSongs.getSelectionModel().getSelectedItem();
+        TableviewSongs.getItems().remove(songToDelete);
+        SongDao.deleteSong(songToDelete);
+
+        AlbumImageView.setImage(songNote);
+
+        File fileToDelete = new File("src/main/resources/Songs/" + songToDelete.getTitle() + ".mp3");
+
+
+        if (fileToDelete.delete()) {
+            playManager.stopPlaying();
+            songProgressSlider.setValue(0);
+            songTotalDuration.setText("0");
+            currentlyPlayingLabel.setText("");
+        }
+
 
     }
+
 
     @FXML
     void newPlaylist(MouseEvent event) {
@@ -525,6 +536,26 @@ public class MyTunesController {
 
     @FXML
     void playlistSongUp(MouseEvent event) {
+        Song songToMove;
+        Song songbuffer;
+        int songToMoveIndexBuffer;
+
+        songToMove = TableviewSongs.getSelectionModel().getSelectedItem();
+
+
+        TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
+
+    }
+
+    public void songMoveHandler(boolean down) {
+        Song songToMove;
+        Song songbuffer;
+        int songToMoveIndexBuffer;
+
+        songToMove = TableviewSongs.getSelectionModel().getSelectedItem();
+
+
+        //TableviewSongsOnPlaylists.get
 
     }
 
@@ -582,9 +613,13 @@ public class MyTunesController {
             }
         }
 
-        currentTable.getSelectionModel().select(nextSongIndex);
         currentSong = currentTable.getItems().get(nextSongIndex);
+        currentTable.getSelectionModel().select(nextSongIndex);
+
+
         resumePlay();
+
+        System.out.println("changed song");
 
 
     }

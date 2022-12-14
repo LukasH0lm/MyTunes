@@ -96,7 +96,19 @@ public class PlayManager {
 
     }
 
+    public void stopPlaying() {
+        if (this.mp != null) {
+            this.mp.stop();
+            currentplayState = playState.STOPPED;
+            controller.playbackSpeed.getSelectionModel().select("1.0");
+            initializeProgressSlider();
 
+            currentTimeInSong();
+            controller.songVolumeSlider.setValue(previousVolumeValue);
+            mp.setVolume(previousVolumeValue);
+            controller.updateCurrentlyPlayingLabel();
+        }
+    }
 
 
     public static int[] splitTime(int seconds) {
@@ -115,13 +127,13 @@ public class PlayManager {
             this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
                 int songDuration = (int) this.mp.getTotalDuration().toSeconds();
                 int[] split = splitTime(songDuration);
-                controller.songTotalDuration.setText(split[0] + "," +  split[1]);
+                controller.songTotalDuration.setText(split[0] + "," + split[1]);
             });
 
             this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) -> {
                 int currentTime = (int) this.mp.getCurrentTime().toSeconds();
                 int[] split = splitTime(currentTime);
-                controller.currentTimeInSong.setText(split[0] + "," +  split[1] + " /");
+                controller.currentTimeInSong.setText(split[0] + "," + split[1] + " /");
             });
 
         }
