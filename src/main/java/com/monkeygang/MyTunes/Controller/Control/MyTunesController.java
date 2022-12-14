@@ -38,6 +38,7 @@ public class MyTunesController {
     long time2;
 
     boolean isdblClicked;
+    boolean isPlayingPlaylist = false;
 
     LinkedList<Song> allSongList;
     LinkedList<Playlist> allPlaylistList;
@@ -141,8 +142,6 @@ public class MyTunesController {
     }
 
 
-
-
     @FXML
     private TableView<Playlist> TableviewPlaylists;
 
@@ -171,8 +170,6 @@ public class MyTunesController {
 
     @FXML
     private TableColumn<Song, String> TableviewSongsOnPlaylistColArtist;
-
-
 
 
     @FXML
@@ -211,14 +208,11 @@ public class MyTunesController {
     private Button editSongButton;
 
 
-
-
-
     @FXML
     public void updateTableviewSongs() {
         TableviewSongs.getItems().clear();
 
-        for (Song song : SongDao.getAllSongs()){
+        for (Song song : SongDao.getAllSongs()) {
             TableviewSongs.getItems().add(song);
 
         }
@@ -338,7 +332,6 @@ public class MyTunesController {
     void playlistChosen(MouseEvent event) {
 
 
-
         TableviewSongsOnPlaylists.getItems().clear();
 
         for (Song song : TableviewPlaylists.getSelectionModel().getSelectedItem().getSongList()) {
@@ -365,29 +358,28 @@ public class MyTunesController {
     }
 
 
-
     @FXML
-    void resumePlay(/*ActionEvent event*/) {
+    void resumePlay() {
 
+        if (currentSong != null) {
 
-        playManager.playSong(currentSong);
+            playManager.playSong(currentSong);
 
-        if (currentSong.getAlbumCover() != null && currentSong.getAlbumCover().getWidth() > 0) {
+            if (currentSong.getAlbumCover() != null && currentSong.getAlbumCover().getWidth() > 0) {
 
-            System.out.println("changing album cover");
-            AlbumImageView.setImage(currentSong.getAlbumCover());
+                System.out.println("changing album cover");
+                AlbumImageView.setImage(currentSong.getAlbumCover());
 
+            } else {
+                AlbumImageView.setImage(songNote);
+                System.out.println("Song dosen't have an album cover");
+            }
         } else {
-            AlbumImageView.setImage(songNote);
-            System.out.println("Song dosen't have an album cover");
+            System.out.println("no song chosen");
         }
 
     }
 
-    @FXML
-    void skipPlay(ActionEvent event) {
-
-    }
 
     @FXML
     void songDrag() {
@@ -398,10 +390,10 @@ public class MyTunesController {
     void songChosen(MouseEvent event) {
 
         currentSong = TableviewSongs.getSelectionModel().getSelectedItem();
-
+        isPlayingPlaylist = false;
 
         if (doubleClickTester(event)) {
-            resumePlay(/*event*/);
+            resumePlay();
         }
 
         //resumePlay(/*event*/);
@@ -412,6 +404,7 @@ public class MyTunesController {
 
     @FXML
     void songOnPlaylistChosen(MouseEvent event) {
+        isPlayingPlaylist = true;
 
         currentSong = TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
 
@@ -490,4 +483,112 @@ public class MyTunesController {
     }
 
 
+    @FXML
+    void newSong(MouseEvent event) {
+
+    }
+
+    @FXML
+    void editSong(MouseEvent event) {
+
+    }
+
+    @FXML
+    void deleteSong(MouseEvent event) {
+
+    }
+
+    @FXML
+    void newPlaylist(MouseEvent event) {
+
+    }
+
+    @FXML
+    void editPlaylist(MouseEvent event) {
+
+    }
+
+    @FXML
+    void deletePlaylist(MouseEvent event) {
+
+    }
+
+    @FXML
+    void playlistSongDelete(MouseEvent event) {
+
+    }
+
+    @FXML
+    void playlistSongDown(MouseEvent event) {
+
+    }
+
+    @FXML
+    void playlistSongUp(MouseEvent event) {
+
+    }
+
+
+    @FXML
+    void resumePlay(MouseEvent event) {
+
+        resumePlay();
+
+    }
+
+    @FXML
+    void playBack(MouseEvent event) {
+        songChangeHandler(false);
+
+
+    }
+
+    @FXML
+    void skipPlay(MouseEvent event) {
+        songChangeHandler(true);
+    }
+
+    public void songChangeHandler(boolean isSkip) {
+        int index = 0;
+        int size = 0;
+        int nextSongIndex;
+        TableView<Song> currentTable;
+
+        if (isPlayingPlaylist) {
+            currentTable = TableviewSongsOnPlaylists;
+        } else {
+            currentTable = TableviewSongs;
+        }
+
+        index = currentTable.getItems().indexOf(currentSong);
+        size = currentTable.getItems().size();
+
+
+        if (isSkip) {
+            if (index + 1 == size) {
+                nextSongIndex = 0;
+
+            } else {
+                nextSongIndex = index + 1;
+
+            }
+        } else {
+            if (index == 0) {
+                nextSongIndex = size - 1;
+
+            } else {
+                nextSongIndex = index - 1;
+
+            }
+        }
+
+        currentTable.getSelectionModel().select(nextSongIndex);
+        currentSong = currentTable.getItems().get(nextSongIndex);
+        resumePlay();
+
+
+    }
+
+
 }
+

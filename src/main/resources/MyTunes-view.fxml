@@ -14,24 +14,24 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="919.0" style="-fx-background-color: #479cde;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monkeygang.MyTunes.Controller.Control.MyTunesController">
    <children>
-      <Button fx:id="deleteSongButton" layoutX="754.0" layoutY="546.0" mnemonicParsing="false" onAction="#deleteSong" text="Delete" />
-      <Button fx:id="editPlaylistButton" layoutX="134.0" layoutY="546.0" mnemonicParsing="false" onAction="#editPlaylist" text="Edit" />
-      <Button fx:id="playlistSongUpButton" layoutX="374.0" layoutY="546.0" mnemonicParsing="false" onAction="#playlistSongUp" text="Up" />
-      <Button fx:id="deletePlaylistButton" layoutX="170.0" layoutY="546.0" mnemonicParsing="false" onAction="#DeletePlaylist" text="Delete" />
-      <Button fx:id="newPlaylistButton" layoutX="94.0" layoutY="546.0" mnemonicParsing="false" onAction="#newPlaylist" text="New" />
-      <Button fx:id="playlistSongDownButton" layoutX="404.0" layoutY="546.0" mnemonicParsing="false" onAction="#playlistSongDown" text="Down" />
-      <Button fx:id="playlistSongDeleteButton" layoutX="451.0" layoutY="546.0" mnemonicParsing="false" onAction="#playlistSongDelete" text="Delete" />
+      <Button fx:id="deleteSongButton" layoutX="754.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#deleteSong" text="Delete" />
+      <Button fx:id="editPlaylistButton" layoutX="134.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#editPlaylist" text="Edit" />
+      <Button fx:id="playlistSongUpButton" layoutX="374.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#playlistSongUp" text="Up" />
+      <Button fx:id="deletePlaylistButton" layoutX="170.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#deletePlaylist" text="Delete" />
+      <Button fx:id="newPlaylistButton" layoutX="94.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#newPlaylist" text="New" />
+      <Button fx:id="playlistSongDownButton" layoutX="404.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#playlistSongDown" text="Down" />
+      <Button fx:id="playlistSongDeleteButton" layoutX="451.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#playlistSongDelete" text="Delete" />
       <Button fx:id="closeButton" layoutX="864.0" layoutY="706.0" mnemonicParsing="false" onAction="#close" text="Close" />
-      <Button fx:id="editSongButton" layoutX="718.0" layoutY="546.0" mnemonicParsing="false" onAction="#editSong" text="Edit" />
-      <Button fx:id="newSongButton" layoutX="678.0" layoutY="546.0" mnemonicParsing="false" onAction="#newSong" text="New" />
-      <Button fx:id="playButton" layoutX="412.0" layoutY="645.0" mnemonicParsing="false" onAction="#resumePlay" style="-fx-background-image: url('https://cdn-icons-png.flaticon.com/512/149/149125.png');" text="Play" />
-      <Button fx:id="playBackButton" layoutX="354.0" layoutY="645.0" mnemonicParsing="false" onAction="#playBack" text="Back" />
-      <Button fx:id="skipPlayButton" layoutX="474.0" layoutY="645.0" mnemonicParsing="false" onAction="#skipPlay" text="Foward" />
+      <Button fx:id="editSongButton" layoutX="718.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#editSong" text="Edit" />
+      <Button fx:id="newSongButton" layoutX="678.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#newSong" text="New" />
+      <Button fx:id="playButton" layoutX="412.0" layoutY="645.0" mnemonicParsing="false" onMouseClicked="#resumePlay" style="-fx-background-image: url('https://cdn-icons-png.flaticon.com/512/149/149125.png');" text="Play" />
+      <Button fx:id="playBackButton" layoutX="354.0" layoutY="645.0" mnemonicParsing="false" onMouseClicked="#playBack" text="Back" />
+      <Button fx:id="skipPlayButton" layoutX="474.0" layoutY="645.0" mnemonicParsing="false" onMouseClicked="#skipPlay" text="Foward" />
       <Label fx:id="playlistLabel" layoutX="113.0" layoutY="6.0" text="Playlists" textFill="WHITE" />
       <Label fx:id="songOnPlaylistLabel" layoutX="386.0" layoutY="6.0" text="Songs on Playlist" textFill="WHITE" />
       <Label fx:id="currentlyPlayingLabel" alignment="TOP_CENTER" layoutX="239.0" layoutY="674.0" prefWidth="400.0" text="Song currently playing: Monkeys spinning monkeys" textAlignment="CENTER" />
       <Label fx:id="songLabel" layoutX="725.0" layoutY="6.0" text="Songs" textFill="WHITE" />
-      <Button layoutX="568.0" layoutY="45.0" mnemonicParsing="false" onAction="#addSongToPlaylist" text="&lt;-" />
+      <Button layoutX="568.0" layoutY="45.0" mnemonicParsing="false" onKeyPressed="#addSongToPlaylist" text="&lt;-" />
       <ImageView disable="true" fitHeight="90.0" fitWidth="83.0" layoutX="10.0" layoutY="554.0" preserveRatio="true">
          <image>
             <Image url="https://i.imgur.com/Quz6duf.png" />
