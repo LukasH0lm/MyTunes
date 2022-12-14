@@ -42,6 +42,10 @@ public class Playlist {
         this.songList.add(song);
     }
 
+    public String getNumberOfSongs(){
+        return String.valueOf(songList.size());
+    }
+
     @Override
     public String toString() {
         return name;
