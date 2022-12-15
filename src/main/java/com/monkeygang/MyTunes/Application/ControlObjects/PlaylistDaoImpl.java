@@ -44,7 +44,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
                 ResultSet rs2 = ps.executeQuery();
                 while (rs2.next()) {
-                    if (rs2.getInt("SongID") != currentID) {
+                    if (rs2.getInt("PlaylistID") != currentID) {
                         break;
                     }
                     currentID++;
@@ -53,11 +53,11 @@ public class PlaylistDaoImpl implements PlaylistDao {
                 //virker kun for en sang lige nu
                 //spørgsmål: hvordan tilføjer man flere foreign keys til en entry
 
-                PreparedStatement ps2 = con.prepareStatement("INSERT INTO Playlists VALUES (?,?,?);");
+                PreparedStatement ps2 = con.prepareStatement("INSERT INTO Playlists VALUES (?,?);");
 
                 ps2.setInt(1, currentID);
                 ps2.setString(2, playlist.getName());
-                ps2.setInt(3, 101);
+
 
 
                 ps2.executeUpdate();
