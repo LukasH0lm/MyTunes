@@ -1,3 +1,4 @@
+
 package com.monkeygang.MyTunes.Application.ControlObjects;
 
 import com.monkeygang.MyTunes.Application.BuisnessLogic.AudioParser;
@@ -202,5 +203,3 @@ public class SongDaoImpl implements SongDao {
 
     }
 }
-
-

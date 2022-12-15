@@ -77,20 +77,14 @@ public class MyTunesController {
 
         /*final File folder = new File("src/main/resources/Songs/");
         listFilesForFolder(folder);
-
         Playlist playlist0 = new Playlist(100, "Kevin music");
-
         allPlaylistList.add(playlist0);
-
         for (Song song : allSongList) {
             SongDao.addSong(song);
             //midlertidig linje
             playlist0.addSong(song);
         }
-
         allPlaylistList.add(playlist0);
-
-
         for (Playlist playlist : allPlaylistList) {
             PLaylistDao.addPlaylist(playlist0);
         }
@@ -806,4 +800,3 @@ public class MyTunesController {
 
 
 }
-
