@@ -1,41 +1,35 @@
 package com.monkeygang.MyTunes.Application.BuisnessLogic;
 
 import com.monkeygang.MyTunes.Application.ControlObjects.Song;
-import com.monkeygang.MyTunes.Controller.Control.MyTunesController;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
-
 import java.io.File;
 
 public class PlayManager {
 
 
     public enum playState {
-        PLAYING,
-        PAUSED,
-        STOPPED
+        PLAYING, PAUSED, STOPPED
     }
 
     playState currentplayState = playState.STOPPED;
 
-    MyTunesController controller;
-    private MediaPlayer mp;
+    public MediaPlayer mp;
 
-    boolean isPlaying = false;
+    /*boolean isPlaying = false;
     private final boolean repeat = false;
     private boolean atEndOfMedia = false;
     private Duration duration;
-
+*/
     private Song previousSong;
     double previousVolumeValue = 1.0;
 
     boolean doubleClicked;
 
 
-    public PlayManager(MyTunesController controller) {
+    public PlayManager(
 
-        this.controller = controller;
+    ) {
 
 
     }
@@ -66,14 +60,8 @@ public class PlayManager {
             this.mp = new MediaPlayer(m);
             mp.play();
             currentplayState = playState.PLAYING;
-            controller.playbackSpeed.getSelectionModel().select("1.0");
-            initializeProgressSlider();
-            initializeVolumeSlider();
-            currentTimeInSong();
-            controller.songVolumeSlider.setValue(previousVolumeValue);
+
             mp.setVolume(previousVolumeValue);
-            controller.updateCurrentlyPlayingLabel();
-            //controller.updateAlbumPicture();
         } else if (currentplayState == playState.PLAYING) {
             if (doubleClicked) {
                 this.mp.stop();
@@ -91,8 +79,6 @@ public class PlayManager {
 
         }
 
-        controller.changePlayButtonIcon(currentplayState);
-
 
     }
 
@@ -100,78 +86,13 @@ public class PlayManager {
         if (this.mp != null) {
             this.mp.stop();
             currentplayState = playState.STOPPED;
-            controller.playbackSpeed.getSelectionModel().select("1.0");
-            initializeProgressSlider();
 
-            currentTimeInSong();
-            controller.songVolumeSlider.setValue(previousVolumeValue);
             mp.setVolume(previousVolumeValue);
-            controller.updateCurrentlyPlayingLabel();
         }
     }
 
 
-    public static int[] splitTime(int seconds) {
 
-        int minutes = seconds / 60;
-        seconds = seconds - (minutes * 60);
-
-        return new int[]{minutes, seconds};
-    }
-
-    public void currentTimeInSong() {
-
-
-        if (this.mp != null) {
-
-            this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
-                int songDuration = (int) this.mp.getTotalDuration().toSeconds();
-                int[] split = splitTime(songDuration);
-                controller.songTotalDuration.setText(split[0] + "," + split[1]);
-            });
-
-            this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) -> {
-                int currentTime = (int) this.mp.getCurrentTime().toSeconds();
-                int[] split = splitTime(currentTime);
-                controller.currentTimeInSong.setText(split[0] + "," + split[1] + " /");
-            });
-
-        }
-    }
-
-    public void initializeProgressSlider() {
-
-        if (this.mp != null) {
-
-            this.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
-                controller.songProgressSlider.setMax(this.mp.getTotalDuration().toSeconds());
-                this.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) ->
-                        controller.songProgressSlider.setValue(newTime.toSeconds()));
-
-            });
-        }
-    }
-
-    public void progressSliderAdjust() {
-        if (this.mp != null) {
-            this.mp.seek(Duration.seconds(controller.songProgressSlider.getValue()));
-        }
-
-    }
-
-    public void initializeVolumeSlider() {
-
-        if (mp != null) {
-
-            mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
-                mp.volumeProperty().addListener((obsV, oldVol, newVol) ->
-                        controller.songVolumeSlider.setValue((Double) newVol));
-
-            });
-
-
-        }
-    }
 
     public String currentlyPlayingSong(Song song) {
 
@@ -182,9 +103,9 @@ public class PlayManager {
 
     }
 
-    public void volumeSliderAdjust() {
+    public void volumeSliderAdjust(double volume) {
         if (this.mp != null) {
-            mp.setVolume(controller.songVolumeSlider.getValue());
+            mp.setVolume(volume);
         }
 
     }
@@ -204,6 +125,10 @@ public class PlayManager {
         }
 
 
+    }
+
+    public double getpreviousvolume() {
+        return previousVolumeValue;
     }
 
 }

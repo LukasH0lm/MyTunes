@@ -1,20 +1,27 @@
 package com.monkeygang.MyTunes.Application.ControlObjects;
 
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
+import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Objects;
 
 public class PlaylistDaoImpl implements PlaylistDao {
 
     private static Connection con;
+    final private SongDaoImpl songDao;
 
-    public PlaylistDaoImpl() {
+    public PlaylistDaoImpl() throws SQLException {
         try {
             con = DriverManager.getConnection("jdbc:sqlserver://h0lm.database.windows.net:1433;database=MyTunes;user=Sune@h0lm;password=lukasersej123!;encrypt=true;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        songDao = new SongDaoImpl();
+
     }
 
     @Override
@@ -38,9 +45,9 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
             try {
 
-                boolean isAtEnd = false;
+                //boolean isAtEnd = false;
                 int currentID = 100;
-                int previousID = 99;
+                //int previousID = 99;
 
                 ResultSet rs2 = ps.executeQuery();
                 while (rs2.next()) {
@@ -53,11 +60,10 @@ public class PlaylistDaoImpl implements PlaylistDao {
                 //virker kun for en sang lige nu
                 //spørgsmål: hvordan tilføjer man flere foreign keys til en entry
 
-                PreparedStatement ps2 = con.prepareStatement("INSERT INTO Playlists VALUES (?,?,?);");
+                PreparedStatement ps2 = con.prepareStatement("INSERT INTO Playlists VALUES (?,?);");
 
                 ps2.setInt(1, currentID);
                 ps2.setString(2, playlist.getName());
-                ps2.setInt(3, 101);
 
 
                 ps2.executeUpdate();
@@ -68,9 +74,6 @@ public class PlaylistDaoImpl implements PlaylistDao {
             } catch (SQLException e) {
 
                 System.err.println(e.getErrorCode() + " : " + e.getMessage());
-                for (StackTraceElement stack : e.getStackTrace()) {
-                    //System.out.println(stack);
-                }
 
 
             }
@@ -81,18 +84,17 @@ public class PlaylistDaoImpl implements PlaylistDao {
     @Override
     public void deletePlayList(Playlist playlist) throws SQLException {
 
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs;");
-        ResultSet rs = ps.executeQuery();
 
         String SQLSongTitle = "'%s'".formatted(playlist.getName());
 
-        PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";");
+        PreparedStatement ps = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";");
+        ps.executeUpdate();
 
     }
 
     @Override
-    public List getAllPlaylists() {
-        List<Playlist> playlists = new ArrayList<>();
+    public LinkedList<Playlist> getAllPlaylists() {
+        LinkedList<Playlist> playlists = new LinkedList<>();
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM Playlists;");
             ResultSet rs = ps.executeQuery();
@@ -104,13 +106,23 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
 
                 playlist = new Playlist(Integer.parseInt(id), name);
+
+                for (Song song : getPlaylistSongs(playlist)) {
+                    playlist.addSong(song);
+                }
+
                 playlists.add(playlist);
 
                 System.out.println(playlists);
+
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | UnsupportedTagException | IOException e) {
             System.err.println("can not access records");
+        } catch (InvalidDataException e) {
+            throw new RuntimeException(e);
+
+
         }
         return playlists;
     }
@@ -131,11 +143,15 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
         playlist.addSong(song);
 
-        int songID = SongDaoImpl.getSongID(song);
+        int songID = songDao.getIDFromSong(song);
         int playlistID = PlaylistDaoImpl.getPlaylistID(playlist);
 
-        PreparedStatement ps = con.prepareStatement("INSERT INTO SongsInPlaylist VALUES (SongID, PlaylistID);");
-        ResultSet rs = ps.executeQuery();
+        PreparedStatement ps = con.prepareStatement("INSERT INTO SongsInPlaylist VALUES (?,?);");
+
+        ps.setInt(1, playlistID);
+        ps.setInt(2, songID);
+
+        ps.executeUpdate();
 
 
     }
@@ -150,4 +166,20 @@ public class PlaylistDaoImpl implements PlaylistDao {
         }
         return -1;
     }
+
+    public LinkedList<Song> getPlaylistSongs(Playlist playlist) throws SQLException, InvalidDataException, UnsupportedTagException, IOException {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM SongsInPlaylist WHERE PlaylistID=?;");
+        ps.setInt(1, getPlaylistID(playlist));
+        ResultSet rs = ps.executeQuery();
+
+        LinkedList<Song> resList = new LinkedList<>();
+
+        while (rs.next()) {
+            resList.add(songDao.getSongfromID(rs.getInt("SongID")));
+        }
+
+        return resList;
+
+    }
+
 }

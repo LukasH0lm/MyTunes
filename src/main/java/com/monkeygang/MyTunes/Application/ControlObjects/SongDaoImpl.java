@@ -77,28 +77,15 @@ public class SongDaoImpl implements SongDao {
             }
             System.out.println(songs);
 
-        } catch (SQLException e) {
+        } catch (SQLException | UnsupportedTagException | IOException e) {
             System.err.println("can not access records");
         } catch (InvalidDataException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedTagException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return songs;
     }
 
-    public static int getSongID(Song song) throws SQLException {
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs;");
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            if (Objects.equals(song.getTitle(), rs.getString("SongTitle")) && (Objects.equals(song.getArtist(), rs.getString("ArtistName")))) {
-                return rs.getInt("SongID");
-            }
-        }
-        return -1;
-    }
+
 
     @Override
     public void updateSongs() {
@@ -114,10 +101,10 @@ public class SongDaoImpl implements SongDao {
     @Override
     public void deleteSong(Song song) throws SQLException {
         //implementation currently deletes all songs by the same name
-        PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs;");
-        ResultSet rs = ps.executeQuery();
-
         String SQLSongTitle = "'%s'".formatted(song.title);
+
+        PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE SongID=" + getIDFromSong(song) + ";");
+        ps.executeUpdate();
 
         PreparedStatement ps2 = con.prepareStatement("DELETE FROM Songs WHERE SongTitle=" + SQLSongTitle + ";");
         ps2.executeUpdate();
@@ -146,9 +133,9 @@ public class SongDaoImpl implements SongDao {
 
             try {
 
-                boolean isAtEnd = false;
+                //boolean isAtEnd = false;
                 int currentID = 100;
-                int previousID = 99;
+                //int previousID = 99;
 
                 ResultSet rs2 = ps.executeQuery();
                 while (rs2.next()) {
@@ -175,12 +162,45 @@ public class SongDaoImpl implements SongDao {
             } catch (SQLException e) {
 
                 System.err.println(e.getErrorCode() + " : " + e.getMessage());
-                for (StackTraceElement stack : e.getStackTrace()) {
-                    //System.out.println(stack);
-                }
+
 
 
             }
         }
     }
+
+    public Song getSongfromID(int id) throws SQLException, InvalidDataException, UnsupportedTagException, IOException {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs WHERE SongID=?;");
+        ps.setInt(1,id);
+
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String songName = rs.getString("SongTitle");
+
+
+        File filePath = new File("src/main/resources/Songs/" + songName + ".mp3");
+
+        return AudioParser.parseMp3(filePath);
+    }
+
+
+    public int getIDFromSong(Song song) throws SQLException {
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs WHERE SongTitle=? AND ArtistName=?;");
+
+        ps.setString(1,song.getTitle());
+        ps.setString(2,song.getArtist());
+
+        ResultSet rs = ps.executeQuery();
+
+        int id = -1;
+
+        while(rs.next()){
+            id = rs.getInt("SongID");
+        }
+
+        return id;
+
+    }
 }
+
+

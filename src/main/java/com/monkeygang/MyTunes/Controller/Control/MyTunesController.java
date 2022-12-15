@@ -7,9 +7,7 @@ import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -17,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 
 import java.io.File;
@@ -26,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class MyTunesController {
     PlaylistDaoImpl PLaylistDao = new PlaylistDaoImpl();
 
 
-    PlayManager playManager = new PlayManager(this);
+    PlayManager playManager = new PlayManager();
 
     //til at checke double click
 
@@ -64,30 +64,18 @@ public class MyTunesController {
         allSongList = new LinkedList<>();
         allPlaylistList = new LinkedList<>();
 
-        TableviewSongColTitle.setCellValueFactory(
-                new PropertyValueFactory<>("title")
-        );
-        TableviewSongColArtist.setCellValueFactory(
-                new PropertyValueFactory<>("artist")
-        );
+        TableviewSongColTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        TableviewSongColArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
 
-        TableviewPlaylistColName.setCellValueFactory(
-                new PropertyValueFactory<>("name")
-        );
+        TableviewPlaylistColName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableviewPlaylistColSongs.setCellValueFactory(
-                new PropertyValueFactory<>("NumberOfSongs")
-        );
+        TableviewPlaylistColSongs.setCellValueFactory(new PropertyValueFactory<>("NumberOfSongs"));
 
-        TableviewSongsOnPlaylistColTitle.setCellValueFactory(
-                new PropertyValueFactory<>("title")
-        );
+        TableviewSongsOnPlaylistColTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-        TableviewSongsOnPlaylistColArtist.setCellValueFactory(
-                new PropertyValueFactory<>("artist")
-        );
+        TableviewSongsOnPlaylistColArtist.setCellValueFactory(new PropertyValueFactory<>("artist"));
 
-        final File folder = new File("src/main/resources/Songs/");
+        /*final File folder = new File("src/main/resources/Songs/");
         listFilesForFolder(folder);
 
         Playlist playlist0 = new Playlist(100, "Kevin music");
@@ -106,22 +94,17 @@ public class MyTunesController {
         for (Playlist playlist : allPlaylistList) {
             PLaylistDao.addPlaylist(playlist0);
         }
-
-        //midlertidige linjer
-        //playlist0.addSong(allSongList.get(0));
-        //playlist0.addSong(allSongList.get(1));
-        //playlist0.addSong(allSongList.get(2));
-        //playlist0.addSong(allSongList.get(3));
-
-        //midlertidig linje
-        TableviewPlaylists.getItems().add(playlist0);
+        midlertidige linjer
+        playlist0.addSong(allSongList.get(0));
+        playlist0.addSong(allSongList.get(1));
+        playlist0.addSong(allSongList.get(2));
+        playlist0.addSong(allSongList.get(3))
+        midlertidig linje
+        TableviewPlaylists.getItems().add(playlist0);*/
 
 
         playbackSpeed.setItems(FXCollections.observableArrayList("0.25", "0.50", "0.75", "1.0", "1.25", "1.50", "1.75", "2.00"));
         playbackSpeed.getSelectionModel().select("1.0");
-
-
-        updateTableviewSongs();
 
 
         updateCurrentlyPlayingLabel();
@@ -130,6 +113,33 @@ public class MyTunesController {
         AlbumImageView.setImage(songNote);
 
 
+        allPlaylistList = PLaylistDao.getAllPlaylists();
+
+        System.out.println("Playlists in database: " + allPlaylistList);
+
+        for (Playlist playlist : allPlaylistList) {
+            LinkedList<Song> songsInThisPlaylist = PLaylistDao.getPlaylistSongs(playlist);
+            for (Song song : songsInThisPlaylist) {
+                playlist.addSong(song);
+            }
+        }
+
+        TableviewPlaylists.getItems().addAll(allPlaylistList);
+
+        updateUI();
+
+        boolean updateSongsFromLocalStorage = false;
+
+        if (updateSongsFromLocalStorage) {
+
+            final File folder = new File("src/main/resources/Songs/");
+            listFilesForFolder(folder);
+
+
+            for (Song song : allSongList) {
+                SongDao.addSong(song);
+            }
+        }
     }
 
     public void listFilesForFolder(final File folder) throws IOException, InvalidDataException, UnsupportedTagException {
@@ -150,6 +160,47 @@ public class MyTunesController {
         }
     }
 
+    public void updateUI() {
+
+        Playlist selectedPlaylist = TableviewPlaylists.getSelectionModel().getSelectedItem();
+        int selectedPlaylistIndex = TableviewPlaylists.getSelectionModel().getSelectedIndex();
+        Song addedSong = TableviewSongs.getSelectionModel().getSelectedItem();
+
+        updateTableviewPlaylist();
+        updateTableviewSongsOnPlaylist();
+        updateTableviewSongs();
+
+
+        if (selectedPlaylist != null) {
+
+            TableviewPlaylists.getSelectionModel().select(selectedPlaylistIndex);
+            TableviewPlaylists.getSelectionModel().focus(selectedPlaylistIndex);
+
+            for (Song song : selectedPlaylist.getSongList()) {
+                TableviewSongsOnPlaylists.getItems().add(song);
+            }
+
+            if (addedSong != null) {
+                TableviewSongsOnPlaylists.scrollTo(addedSong);
+            }
+
+        }
+        TableviewSongsOnPlaylists.getItems().clear();
+
+
+        TableviewPlaylists.getSelectionModel().select(selectedPlaylistIndex);
+        TableviewPlaylists.getSelectionModel().focus(selectedPlaylistIndex);
+
+        Playlist currentPlaylist = TableviewPlaylists.getSelectionModel().getSelectedItem();
+
+        if (currentPlaylist != null) {
+
+            TableviewSongsOnPlaylists.getItems().addAll(currentPlaylist.getSongList());
+            TableviewSongsOnPlaylists.scrollTo(addedSong);
+        }
+
+
+    }
 
     @FXML
     private TableView<Playlist> TableviewPlaylists;
@@ -160,16 +211,18 @@ public class MyTunesController {
     @FXML
     private TableColumn<Playlist, String> TableviewPlaylistColSongs;
 
-    @FXML
-    private TableView<Song> TableviewSongs;
-
 
     @FXML
-    private TableColumn<Song, String> TableviewSongColTitle;
+    public void updateTableviewPlaylist() {
+        TableviewPlaylists.getItems().clear();
+        for (Playlist playlist : PLaylistDao.getAllPlaylists()) {
+            TableviewPlaylists.getItems().add(playlist);
 
-    @FXML
-    private TableColumn<Song, String> TableviewSongColArtist;
 
+        }
+
+
+    }
 
     @FXML
     private TableView<Song> TableviewSongsOnPlaylists;
@@ -181,40 +234,28 @@ public class MyTunesController {
     private TableColumn<Song, String> TableviewSongsOnPlaylistColArtist;
 
 
-    @FXML
-    public Slider songProgressSlider;
+    public void updateTableviewSongsOnPlaylist() {
+        TableviewSongsOnPlaylists.getItems().clear();
+
+
+        Playlist currentPlaylist = TableviewPlaylists.getSelectionModel().getSelectedItem();
+
+        if (currentPlaylist != null) {
+
+            TableviewSongsOnPlaylists.getItems().addAll(currentPlaylist.getSongList());
+        }
+    }
 
 
     @FXML
-    public Slider songVolumeSlider;
-
-    @FXML
-    public ComboBox<String> playbackSpeed;
-
-    @FXML
-    private Button closeButton;
-
-    @FXML
-    private Label currentlyPlayingLabel;
+    private TableView<Song> TableviewSongs;
 
 
     @FXML
-    public Label currentTimeInSong;
+    private TableColumn<Song, String> TableviewSongColTitle;
 
     @FXML
-    public Label songTotalDuration;
-
-    @FXML
-    private Button deletePlaylistButton;
-
-    @FXML
-    private Button deleteSongButton;
-
-    @FXML
-    private Button editPlaylistButton;
-
-    @FXML
-    private Button editSongButton;
+    private TableColumn<Song, String> TableviewSongColArtist;
 
 
     @FXML
@@ -237,73 +278,31 @@ public class MyTunesController {
     }
 
 
-    public void updateTableviewSongsOnPlaylist(MouseEvent event) {
-        TableviewSongsOnPlaylists.getItems().clear();
-
-
-        TableviewSongsOnPlaylists.getItems().addAll(SongDao.getAllSongs());
-
-    }
-
-
-    @FXML
-    private ImageView AlbumImageView;
-    @FXML
-    private Button newPlaylistButton;
-
-    @FXML
-    private Button newSongButton;
-
-    @FXML
-    private Button playBackButton;
-
-    @FXML
-    private Button playButton;
-
-    @FXML
-    private Label playlistLabel;
-
-    @FXML
-    private Button playlistSongDeleteButton;
-
-    @FXML
-    private Button playlistSongDownButton;
-
-    @FXML
-    private Button playlistSongUpButton;
-
-    @FXML
-    private Button skipPlayButton;
-
-    @FXML
-    private Label songLabel;
-
-    @FXML
-    private Label songOnPlaylistLabel;
-
-
     @FXML
     void DeletePlaylist(MouseEvent event) {
 
     }
 
     @FXML
-    void addSongToPlaylist(MouseEvent event) {
 
-    }
-
+    private Button addSongToaddSongToPlaylistButton;
 
     @FXML
-    void progressSliderOnMousePressed(MouseEvent event) {
-        playManager.progressSliderAdjust();
+    void addSongToPlaylist(MouseEvent event) throws SQLException {
 
-    }
+        Playlist playlistToAddTo = TableviewPlaylists.getSelectionModel().getSelectedItem();
+        int playlistToAddToIndex = TableviewPlaylists.getSelectionModel().getSelectedIndex();
+        Song songToAdd = TableviewSongs.getSelectionModel().getSelectedItem();
+
+        if (playlistToAddTo != null) {
+            System.out.println("adding " + songToAdd + " to " + playlistToAddTo);
+            playlistToAddTo.addSong(songToAdd);
+            PLaylistDao.addSongToPlaylist(playlistToAddTo, songToAdd);
+            updateUI();
 
 
-    @FXML
-    void volumeSliderOnMousePressed(MouseEvent event) {
+        }
 
-        playManager.volumeSliderAdjust();
 
     }
 
@@ -328,7 +327,25 @@ public class MyTunesController {
 
         if (currentSong != null) {
 
+            ArrayList<String> minutesAndSeconds = null;
+
             playManager.playSong(currentSong);
+            initializeProgressSlider();
+            initializeVolumeSlider();
+            currentTimeInSong();
+            setPlaybackspeed();
+            songVolumeSlider.setValue(playManager.getpreviousvolume());
+            updateCurrentlyPlayingLabel();
+            if (playManager.getCurrentplayState() == PlayManager.playState.STOPPED) {
+                playbackSpeed.getSelectionModel().select("1.0");
+                initializeProgressSlider();
+
+
+            }
+
+
+            changePlayButtonIcon(playManager.getCurrentplayState());
+
 
             if (currentSong.getAlbumCover() != null && currentSong.getAlbumCover().getWidth() > 0) {
 
@@ -389,10 +406,8 @@ public class MyTunesController {
 
         if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED) && !drag_Flag) {
             long diff = 0;
-            if (time1 == 0 || System.currentTimeMillis() - time1 > 1000)
-                time1 = System.currentTimeMillis();
-            else
-                time2 = System.currentTimeMillis();
+            if (time1 == 0 || System.currentTimeMillis() - time1 > 1000) time1 = System.currentTimeMillis();
+            else time2 = System.currentTimeMillis();
             if (time1 != 0 && time2 != 0) {
                 diff = time2 - time1;
                 time1 = 0;
@@ -438,15 +453,6 @@ public class MyTunesController {
 
     }
 
-    @FXML
-    public void changeSpeed() {
-
-        playManager.changePlaybackSpeed(playbackSpeed.getSelectionModel().getSelectedItem());
-        System.out.println(playbackSpeed.getSelectionModel().getSelectedItem());
-
-
-    }
-
 
     @FXML
     void newSong(MouseEvent event) throws InvalidDataException, UnsupportedTagException, IOException, SQLException {
@@ -457,9 +463,7 @@ public class MyTunesController {
 
         FileChooser fileChooser = new FileChooser();
 
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Sound Files", "*.mp3")
-        );
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Sound Files", "*.mp3"));
 
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
@@ -476,7 +480,7 @@ public class MyTunesController {
             Song newSong = AudioParser.parseMp3(copiedFile);
             SongDao.addSong(newSong);
             allSongList.add(newSong);
-            updateTableviewSongs();
+            updateUI();
         }
     }
 
@@ -490,8 +494,6 @@ public class MyTunesController {
     void deleteSong(MouseEvent event) throws SQLException {
         Song songToDelete;
         songToDelete = TableviewSongs.getSelectionModel().getSelectedItem();
-        TableviewSongs.getItems().remove(songToDelete);
-        SongDao.deleteSong(songToDelete);
 
         AlbumImageView.setImage(songNote);
 
@@ -503,6 +505,18 @@ public class MyTunesController {
             songProgressSlider.setValue(0);
             songTotalDuration.setText("0");
             currentlyPlayingLabel.setText("");
+
+            TableviewSongs.getItems().remove(songToDelete);
+            SongDao.deleteSong(songToDelete);
+            for (Playlist playlist : PLaylistDao.getAllPlaylists()) {
+                if (playlist.getSongList().contains(songToDelete)) {
+                    PLaylistDao.deleteSongFromPlaylist(playlist, songToDelete);
+                }
+            }
+
+            updateUI();
+
+
         }
 
 
@@ -623,6 +637,172 @@ public class MyTunesController {
 
 
     }
+
+    @FXML
+    public Slider songProgressSlider;
+
+
+    @FXML
+    public Slider songVolumeSlider;
+
+    public void setVolume() {
+
+        playManager.volumeSliderAdjust(songVolumeSlider.getValue());
+        System.out.println(songVolumeSlider.getValue());
+
+
+    }
+
+    @FXML
+    public ComboBox<String> playbackSpeed;
+
+    public void setPlaybackspeed() {
+
+        playManager.changePlaybackSpeed(playbackSpeed.getSelectionModel().getSelectedItem());
+        System.out.println(playbackSpeed.getSelectionModel().getSelectedItem());
+
+
+    }
+
+
+    //ting der var i PlayManager som ikke skulle være der (dee var der fordi programmøren var inkompetent(programmøren var Sune))
+
+    @FXML
+    void progressSliderOnMousePressed(MouseEvent event) {
+        progressSliderAdjust();
+
+    }
+
+
+    @FXML
+    void volumeSliderOnMousePressed(MouseEvent event) {
+
+        playManager.volumeSliderAdjust(songVolumeSlider.getValue());
+
+    }
+
+    public void currentTimeInSong() {
+
+
+        if (playManager.mp != null) {
+
+            playManager.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                int songDuration = (int) playManager.mp.getTotalDuration().toSeconds();
+                int[] split = splitTime(songDuration);
+                songTotalDuration.setText(split[0] + "," + split[1]);
+            });
+
+            playManager.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) -> {
+                int currentTime = (int) playManager.mp.getCurrentTime().toSeconds();
+                int[] split = splitTime(currentTime);
+                currentTimeInSong.setText(split[0] + "," + split[1] + " /");
+            });
+
+        }
+
+    }
+
+    public static int[] splitTime(int seconds) {
+
+        int minutes = seconds / 60;
+        seconds = seconds - (minutes * 60);
+
+        return new int[]{minutes, seconds};
+    }
+
+
+    public void initializeProgressSlider() {
+
+        if (playManager.mp != null) {
+
+            playManager.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                songProgressSlider.setMax(playManager.mp.getTotalDuration().toSeconds());
+                playManager.mp.currentTimeProperty().addListener((obsT, oldTime, newTime) -> songProgressSlider.setValue(newTime.toSeconds()));
+
+            });
+        }
+    }
+
+    public void progressSliderAdjust() {
+        if (playManager.mp != null) {
+            playManager.mp.seek(Duration.seconds(songProgressSlider.getValue()));
+        }
+
+    }
+
+    public void initializeVolumeSlider() {
+
+        if (playManager.mp != null) {
+
+            playManager.mp.statusProperty().addListener((obsS, oldStatus, newStatus) -> {
+                playManager.mp.volumeProperty().addListener((obsV, oldVol, newVol) -> songVolumeSlider.setValue((Double) newVol));
+
+            });
+
+
+        }
+    }
+
+    @FXML
+    private Button closeButton;
+
+    @FXML
+    private Label currentlyPlayingLabel;
+
+
+    @FXML
+    public Label currentTimeInSong;
+
+    @FXML
+    public Label songTotalDuration;
+
+    @FXML
+    private Button deletePlaylistButton;
+
+    @FXML
+    private Button deleteSongButton;
+
+    @FXML
+    private Button editPlaylistButton;
+
+    @FXML
+    private Button editSongButton;
+
+
+    @FXML
+    private ImageView AlbumImageView;
+    @FXML
+    private Button newPlaylistButton;
+
+    @FXML
+    private Button newSongButton;
+
+    @FXML
+    private Button playBackButton;
+
+    @FXML
+    private Button playButton;
+
+    @FXML
+    private Label playlistLabel;
+
+    @FXML
+    private Button playlistSongDeleteButton;
+
+    @FXML
+    private Button playlistSongDownButton;
+
+    @FXML
+    private Button playlistSongUpButton;
+
+    @FXML
+    private Button skipPlayButton;
+
+    @FXML
+    private Label songLabel;
+
+    @FXML
+    private Label songOnPlaylistLabel;
 
 
 }
