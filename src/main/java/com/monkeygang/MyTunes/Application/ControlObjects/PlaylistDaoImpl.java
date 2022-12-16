@@ -51,7 +51,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
                 ResultSet rs2 = ps.executeQuery();
                 while (rs2.next()) {
-                    if (rs2.getInt("SongID") != currentID) {
+                    if (rs2.getInt("PlaylistID") != currentID) {
                         break;
                     }
                     currentID++;

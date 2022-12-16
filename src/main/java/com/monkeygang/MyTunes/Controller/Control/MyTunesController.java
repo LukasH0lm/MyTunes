@@ -8,11 +8,13 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -518,8 +520,52 @@ public class MyTunesController {
 
 
     @FXML
-    void newPlaylist(MouseEvent event) {
+    void newPlaylist(MouseEvent event) throws InvalidDataException, UnsupportedTagException, IOException, SQLException {
 
+        System.out.println("adding new playlist");
+        Stage primaryStage = new Stage();
+
+
+        Label label = new Label("Name of playlist");
+        TextField tf = new TextField();
+        Button btn = new Button("Add");
+
+
+        HBox root = new HBox();
+        root.setSpacing(20);
+        root.getChildren().addAll(label, tf, btn);
+        Scene scene = new Scene(root, 315, 100);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Add new playlist");
+        primaryStage.show();
+
+        btn.setOnAction(e ->
+        {
+            String userInput = tf.getText();
+
+
+            //ID her er i princippet ligegyldigt, da vi sætter id i dao.
+            //Vi burde at kunne slette id fra playlist, men vi venter til sidst.
+            //Det id vi sætter ind her er useless, da den får et andet id i DB.
+
+            Playlist newPlaylist = new Playlist(1, userInput);
+            try {
+                PLaylistDao.addPlaylist(newPlaylist);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            TableviewPlaylists.getItems().clear();
+            TableviewPlaylists.getItems().addAll(allPlaylistList);
+
+            updateUI();
+
+            //Vi skal bruge database her i stedet,
+            // men vi skal lige have det ordenligt op at køre.
+            //allPlaylistList.add(newPlaylist);
+
+
+        });
     }
 
     @FXML
