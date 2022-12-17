@@ -574,12 +574,37 @@ public class MyTunesController {
     }
 
     @FXML
-    void deletePlaylist(MouseEvent event) {
+    void deletePlaylist(MouseEvent event) throws SQLException {
+
+        Playlist playlistToDelete;
+        playlistToDelete = TableviewPlaylists.getSelectionModel().getSelectedItem();
+
+
+        try {
+            PLaylistDao.deletePlayList(playlistToDelete);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        updateUI();
+
+        System.out.println(playlistToDelete + " has been deleted");
 
     }
 
     @FXML
-    void playlistSongDelete(MouseEvent event) {
+    void playlistSongDelete(MouseEvent event) throws SQLException {
+
+        Playlist playlistToDeleteFrom;
+        Song songToDeleteFromPlaylist;
+        songToDeleteFromPlaylist = TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
+        playlistToDeleteFrom = TableviewPlaylists.getSelectionModel().getSelectedItem();
+
+        PLaylistDao.deleteSongFromPlaylist(playlistToDeleteFrom, songToDeleteFromPlaylist);
+
+        updateUI();
+
+        System.out.println("Song: " + songToDeleteFromPlaylist + " got deleted from playlist: " + playlistToDeleteFrom);
 
     }
 

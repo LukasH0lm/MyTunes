@@ -17,7 +17,7 @@ public interface PlaylistDao {
     public void updatePlaylists();
 
 
-    void deleteSongFromPlaylist(Playlist playlist, Song song);
+    void deleteSongFromPlaylist(Playlist playlist, Song song) throws SQLException;
 
     public void addSongToPlaylist(Playlist playlist, Song song) throws SQLException;
 
