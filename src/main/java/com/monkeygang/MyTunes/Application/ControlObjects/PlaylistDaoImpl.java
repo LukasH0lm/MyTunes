@@ -96,6 +96,21 @@ public class PlaylistDaoImpl implements PlaylistDao {
     }
 
     @Override
+    public void editPlaylist(Playlist playlist, String newName) throws SQLException {
+
+
+        String SQLSongTitle = "'%s'".formatted(playlist.getName());
+;
+
+        PreparedStatement ps = con.prepareStatement("UPDATE Playlists SET PlaylistName=" + newName + " WHERE PlaylistName=" + SQLSongTitle + ";" );
+
+        ps.executeUpdate();
+
+
+    }
+
+
+    @Override
     public LinkedList<Playlist> getAllPlaylists() {
         LinkedList<Playlist> playlists = new LinkedList<>();
         try {

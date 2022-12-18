@@ -12,6 +12,9 @@ public interface PlaylistDao {
 
     void deletePlayList(Playlist playlist) throws SQLException;
 
+
+    void editPlaylist(Playlist playlist, String newName) throws SQLException;
+
     public List getAllPlaylists();
 
     public void updatePlaylists();

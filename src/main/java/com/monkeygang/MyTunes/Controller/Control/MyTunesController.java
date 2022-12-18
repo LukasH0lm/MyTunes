@@ -555,10 +555,10 @@ public class MyTunesController {
                 throw new RuntimeException(ex);
             }
 
-            TableviewPlaylists.getItems().clear();
-            TableviewPlaylists.getItems().addAll(allPlaylistList);
 
             updateUI();
+
+            primaryStage.close();
 
             //Vi skal bruge database her i stedet,
             // men vi skal lige have det ordenligt op at køre.
@@ -569,8 +569,49 @@ public class MyTunesController {
     }
 
     @FXML
-    void editPlaylist(MouseEvent event) {
+    void editPlaylist(MouseEvent event) throws InvalidDataException, UnsupportedTagException, IOException, SQLException {
 
+        System.out.println("editing playlist");
+        Stage primaryStage = new Stage();
+
+
+        Label label = new Label("Change name to");
+        TextField tf = new TextField();
+        Button btn = new Button("Change");
+
+
+        HBox root = new HBox();
+        root.setSpacing(20);
+        root.getChildren().addAll(label, tf, btn);
+        Scene scene = new Scene(root, 340, 100);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Edit Playlist");
+        primaryStage.show();
+
+        btn.setOnAction(e ->
+        {
+            String userInput = "'" + tf.getText() + "'";
+            Playlist songToEdit;
+            songToEdit = TableviewPlaylists.getSelectionModel().getSelectedItem();
+
+
+            try {
+                PLaylistDao.editPlaylist(songToEdit, userInput);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+
+            System.out.println("Playlist name changed from " + songToEdit.getName() + " to " + userInput);
+
+            updateUI();
+
+            primaryStage.close();
+
+
+
+
+        });
     }
 
     @FXML
