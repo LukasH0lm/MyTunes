@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="919.0" style="-fx-background-color: #479cde;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monkeygang.MyTunes.Controller.Control.MyTunesController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="919.0" style="-fx-background-color: #479cde;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.monkeygang.MyTunes.Controller.Control.MyTunesController">
    <children>
       <Button fx:id="deleteSongButton" layoutX="754.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#deleteSong" text="Delete" />
       <Button fx:id="editPlaylistButton" layoutX="134.0" layoutY="546.0" mnemonicParsing="false" onMouseClicked="#editPlaylist" text="Edit" />
@@ -21,10 +28,10 @@
       <Button fx:id="playButton" layoutX="412.0" layoutY="645.0" mnemonicParsing="false" onMouseClicked="#resumePlay" style="-fx-background-image: url('https://cdn-icons-png.flaticon.com/512/149/149125.png');" text="Play" />
       <Button fx:id="playBackButton" layoutX="354.0" layoutY="645.0" mnemonicParsing="false" onMouseClicked="#playBack" text="Back" />
       <Button fx:id="skipPlayButton" layoutX="474.0" layoutY="645.0" mnemonicParsing="false" onMouseClicked="#skipPlay" text="Foward" />
-      <Label fx:id="playlistLabel" layoutX="113.0" layoutY="6.0" text="Playlists" textFill="WHITE" />
-      <Label fx:id="songOnPlaylistLabel" layoutX="386.0" layoutY="6.0" text="Songs on Playlist" textFill="WHITE" />
+      <Label fx:id="playlistLabel" layoutX="134.0" layoutY="44.0" text="Playlists" textFill="WHITE" />
+      <Label fx:id="songOnPlaylistLabel" layoutX="386.0" layoutY="44.0" text="Songs on Playlist" textFill="WHITE" />
       <Label fx:id="currentlyPlayingLabel" alignment="TOP_CENTER" layoutX="239.0" layoutY="674.0" prefWidth="400.0" text="Song currently playing: Monkeys spinning monkeys" textAlignment="CENTER" />
-      <Label fx:id="songLabel" layoutX="725.0" layoutY="6.0" text="Songs" textFill="WHITE" />
+      <Label fx:id="songLabel" layoutX="738.0" layoutY="44.0" text="Songs" textFill="WHITE" />
       <Button fx:id="addSongToPlaylistButton" layoutX="583.0" layoutY="95.0" mnemonicParsing="false" onMouseClicked="#addSongToPlaylist" text="&lt;-" />
       <ImageView disable="true" fitHeight="90.0" fitWidth="83.0" layoutX="10.0" layoutY="554.0" preserveRatio="true">
          <image>
@@ -40,19 +47,19 @@
       <Label fx:id="currentTimeInSong" layoutX="404.0" layoutY="692.0" text="0,00 /" />
       <Label fx:id="songTotalDuration" layoutX="438.0" layoutY="692.0" text="0,00" />
       <ImageView fx:id="AlbumImageView" fitHeight="120.0" fitWidth="120.0" layoutX="130.0" layoutY="582.0" pickOnBounds="true" preserveRatio="true" />
-      <TableView fx:id="TableviewPlaylists" layoutX="8.0" layoutY="35.0" onMouseClicked="#playlistChosen" prefHeight="477.0" prefWidth="262.0">
+      <TableView fx:id="TableviewPlaylists" layoutX="24.0" layoutY="69.0" onMouseClicked="#playlistChosen" prefHeight="477.0" prefWidth="262.0">
         <columns>
           <TableColumn fx:id="TableviewPlaylistColName" prefWidth="145.6164255142212" text="Name" />
           <TableColumn fx:id="TableviewPlaylistColSongs" minWidth="5.98419189453125" prefWidth="114.38890075683594" text="Songs" />
         </columns>
       </TableView>
-      <TableView fx:id="TableviewSongsOnPlaylists" layoutX="308.0" layoutY="35.0" onMouseClicked="#songOnPlaylistChosen" prefHeight="477.0" prefWidth="262.0">
+      <TableView fx:id="TableviewSongsOnPlaylists" layoutX="308.0" layoutY="69.0" onMouseClicked="#songOnPlaylistChosen" prefHeight="477.0" prefWidth="262.0">
          <columns>
             <TableColumn fx:id="TableviewSongsOnPlaylistColTitle" prefWidth="134.64520263671875" text="Title" />
             <TableColumn fx:id="TableviewSongsOnPlaylistColArtist" prefWidth="118.68731689453125" text="Artist" />
          </columns>
       </TableView>
-      <TableView fx:id="TableviewSongs" layoutX="628.0" layoutY="35.0" onMouseClicked="#songChosen" prefHeight="477.0" prefWidth="262.0">
+      <TableView fx:id="TableviewSongs" layoutX="623.0" layoutY="69.0" onMouseClicked="#songChosen" prefHeight="477.0" prefWidth="262.0">
          <columns>
             <TableColumn fx:id="TableviewSongColTitle" prefWidth="127.66357421875" text="Title" />
             <TableColumn fx:id="TableviewSongColArtist" minWidth="0.0" prefWidth="115.6951904296875" text="Artist" />
@@ -69,5 +76,6 @@
             <Cursor fx:constant="NONE" />
          </cursor>
       </ImageView>
+      <TextField fx:id="filterTextField" layoutX="622.0" layoutY="14.0" prefHeight="25.0" prefWidth="262.0" />
    </children>
 </Pane>
