@@ -354,7 +354,6 @@ public class MyTunesController {
         if (currentSong != null) {
 
             ArrayList<String> minutesAndSeconds = null;
-
             playManager.playSong(currentSong);
             initializeProgressSlider();
             initializeVolumeSlider();
@@ -368,6 +367,17 @@ public class MyTunesController {
 
 
             }
+
+            if (playManager.mp != null) {
+
+                playManager.mp.setOnEndOfMedia(() ->
+                {
+                    System.out.println("Current song is over. Changing to next song");
+                    songChangeHandler(true);
+
+                });
+            }
+
 
 
             changePlayButtonIcon(playManager.getCurrentplayState());
@@ -793,7 +803,7 @@ public class MyTunesController {
     }
 
 
-    //ting der var i PlayManager som ikke skulle være der (dee var der fordi programmøren var inkompetent(programmøren var Sune))
+    //ting der var i PlayManager som ikke skulle være der (dee var der fordi programmøren var inkompetent(Lukas er en gris :-)  ))
 
     @FXML
     void progressSliderOnMousePressed(MouseEvent event) {

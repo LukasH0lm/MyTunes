@@ -81,7 +81,6 @@ public class PlayManager {
 
 
     }
-
     public void stopPlaying() {
         if (this.mp != null) {
             this.mp.stop();
