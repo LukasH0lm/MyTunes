@@ -4,17 +4,19 @@ import java.util.LinkedList;
 
 public class Playlist {
 
-
+    int id;
     String name;
 
     LinkedList<Song> songList;
 
     public Playlist(int id, String name, LinkedList<Song> songList) {
+        this.id = id;
         this.name = name;
         this.songList = songList;
     }
 
     public Playlist(int id, String name) {
+        this.id = id;
         this.name = name;
 
         this.songList = new LinkedList<>();
@@ -38,11 +40,11 @@ public class Playlist {
         this.songList = songList;
     }
 
-    public void addSong(Song song){
+    public void addSong(Song song) {
         this.songList.add(song);
     }
 
-    public String getNumberOfSongs(){
+    public String getNumberOfSongs() {
         return String.valueOf(songList.size());
     }
 

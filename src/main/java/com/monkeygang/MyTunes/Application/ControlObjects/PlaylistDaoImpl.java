@@ -87,7 +87,7 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
         String SQLSongTitle = "'%s'".formatted(playlist.getName());
 
-        PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE PlaylistID=" + getPlaylistID(playlist) + ";" );
+        PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE PlaylistID=" + getPlaylistID(playlist) + ";");
         ps.executeUpdate();
 
         PreparedStatement ps2 = con.prepareStatement("DELETE FROM Playlists WHERE PlaylistName=" + SQLSongTitle + ";");
@@ -100,9 +100,8 @@ public class PlaylistDaoImpl implements PlaylistDao {
 
 
         String SQLSongTitle = "'%s'".formatted(playlist.getName());
-;
 
-        PreparedStatement ps = con.prepareStatement("UPDATE Playlists SET PlaylistName=" + newName + " WHERE PlaylistName=" + SQLSongTitle + ";" );
+        PreparedStatement ps = con.prepareStatement("UPDATE Playlists SET PlaylistName=" + newName + " WHERE PlaylistName=" + SQLSongTitle + ";");
 
         ps.executeUpdate();
 
@@ -154,14 +153,11 @@ public class PlaylistDaoImpl implements PlaylistDao {
     public void deleteSongFromPlaylist(Playlist playlist, Song song) throws SQLException {
 
 
-
-       // PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE SongID=" + songDao.getIDFromSong(song)  + ";" );
-        PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE SongID=" + songDao.getIDFromSong(song) + " AND PlaylistID=" + getPlaylistID(playlist) + ";" );
+        // PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE SongID=" + songDao.getIDFromSong(song)  + ";" );
+        PreparedStatement ps = con.prepareStatement("DELETE FROM SongsInPlaylist WHERE SongID=" + songDao.getIDFromSong(song) + " AND PlaylistID=" + getPlaylistID(playlist) + ";");
 
 
         ps.executeUpdate();
-
-
 
 
     }

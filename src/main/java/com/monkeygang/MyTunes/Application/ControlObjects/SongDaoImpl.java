@@ -71,7 +71,7 @@ public class SongDaoImpl implements SongDao {
                     }
                 }
 
-                song = new Song(Integer.parseInt(id), title, artist, album, genre,albumCover);
+                song = new Song(Integer.parseInt(id), title, artist, album, genre, albumCover);
                 songs.add(song);
 
 
@@ -85,7 +85,6 @@ public class SongDaoImpl implements SongDao {
         }
         return songs;
     }
-
 
 
     @Override
@@ -165,14 +164,13 @@ public class SongDaoImpl implements SongDao {
                 System.err.println(e.getErrorCode() + " : " + e.getMessage());
 
 
-
             }
         }
     }
 
     public Song getSongfromID(int id) throws SQLException, InvalidDataException, UnsupportedTagException, IOException {
         PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs WHERE SongID=?;");
-        ps.setInt(1,id);
+        ps.setInt(1, id);
 
         ResultSet rs = ps.executeQuery();
         rs.next();
@@ -188,14 +186,14 @@ public class SongDaoImpl implements SongDao {
     public int getIDFromSong(Song song) throws SQLException {
         PreparedStatement ps = con.prepareStatement("SELECT * FROM Songs WHERE SongTitle=? AND ArtistName=?;");
 
-        ps.setString(1,song.getTitle());
-        ps.setString(2,song.getArtist());
+        ps.setString(1, song.getTitle());
+        ps.setString(2, song.getArtist());
 
         ResultSet rs = ps.executeQuery();
 
         int id = -1;
 
-        while(rs.next()){
+        while (rs.next()) {
             id = rs.getInt("SongID");
         }
 

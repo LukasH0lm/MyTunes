@@ -6,16 +6,16 @@ import java.util.List;
 
 public interface SongDao {
 
-    public List getAllSongs();
+    List getAllSongs();
 
-    public void updateSongs();
+    void updateSongs();
 
     void updateSongs(Song[] songs);
 
 
     void deleteSong(Song song) throws SQLException;
 
-    public void addSong(Song song) throws SQLException;
+    void addSong(Song song) throws SQLException;
 
 
 

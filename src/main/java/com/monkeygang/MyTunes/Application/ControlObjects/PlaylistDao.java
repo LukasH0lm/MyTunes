@@ -15,14 +15,14 @@ public interface PlaylistDao {
 
     void editPlaylist(Playlist playlist, String newName) throws SQLException;
 
-    public List getAllPlaylists();
+    List getAllPlaylists();
 
-    public void updatePlaylists();
+    void updatePlaylists();
 
 
     void deleteSongFromPlaylist(Playlist playlist, Song song) throws SQLException;
 
-    public void addSongToPlaylist(Playlist playlist, Song song) throws SQLException;
+    void addSongToPlaylist(Playlist playlist, Song song) throws SQLException;
 
 
 }

@@ -35,25 +35,25 @@ import java.util.Objects;
 public class MyTunesController {
 
 
-    Song currentSong;
-    SongDaoImpl SongDao = new SongDaoImpl();
-    PlaylistDaoImpl PLaylistDao = new PlaylistDaoImpl();
+    private Song currentSong;
+    private final SongDaoImpl SongDao = new SongDaoImpl();
+    private final PlaylistDaoImpl PlaylistDao = new PlaylistDaoImpl();
 
 
-    PlayManager playManager = new PlayManager();
+    private final PlayManager playManager = new PlayManager();
 
     //til at checke double click
 
-    boolean drag_Flag;
-    long time1;
-    long time2;
+    private boolean drag_Flag;
+    private long time1;
+    private long time2;
 
-    boolean isdblClicked;
-    boolean isPlayingPlaylist = false;
+    private boolean isdblClicked;
+    private boolean isPlayingPlaylist = false;
 
-    LinkedList<Song> allSongList;
-    LinkedList<Playlist> allPlaylistList;
-    Image songNote;
+    private LinkedList<Song> allSongList;
+    private LinkedList<Playlist> allPlaylistList;
+    private Image songNote;
 
     public MyTunesController() throws SQLException {
     }
@@ -88,7 +88,7 @@ public class MyTunesController {
         }
         allPlaylistList.add(playlist0);
         for (Playlist playlist : allPlaylistList) {
-            PLaylistDao.addPlaylist(playlist0);
+            PlaylistDao.addPlaylist(playlist0);
         }
         midlertidige linjer
         playlist0.addSong(allSongList.get(0));
@@ -109,12 +109,12 @@ public class MyTunesController {
         AlbumImageView.setImage(songNote);
 
 
-        allPlaylistList = PLaylistDao.getAllPlaylists();
+        allPlaylistList = PlaylistDao.getAllPlaylists();
 
         System.out.println("Playlists in database: " + allPlaylistList);
 
         for (Playlist playlist : allPlaylistList) {
-            LinkedList<Song> songsInThisPlaylist = PLaylistDao.getPlaylistSongs(playlist);
+            LinkedList<Song> songsInThisPlaylist = PlaylistDao.getPlaylistSongs(playlist);
             for (Song song : songsInThisPlaylist) {
                 playlist.addSong(song);
             }
@@ -211,7 +211,7 @@ public class MyTunesController {
     @FXML
     public void updateTableviewPlaylist() {
         TableviewPlaylists.getItems().clear();
-        for (Playlist playlist : PLaylistDao.getAllPlaylists()) {
+        for (Playlist playlist : PlaylistDao.getAllPlaylists()) {
             TableviewPlaylists.getItems().add(playlist);
 
 
@@ -293,7 +293,7 @@ public class MyTunesController {
         if (playlistToAddTo != null) {
             System.out.println("adding " + songToAdd + " to " + playlistToAddTo);
             playlistToAddTo.addSong(songToAdd);
-            PLaylistDao.addSongToPlaylist(playlistToAddTo, songToAdd);
+            PlaylistDao.addSongToPlaylist(playlistToAddTo, songToAdd);
             updateUI();
 
 
@@ -411,13 +411,7 @@ public class MyTunesController {
             }
 
             System.out.println("time between clicks in ms: " + diff);
-            if (diff > 0 && diff <= 500) {
-                isdblClicked = true;
-
-            } else {
-                isdblClicked = false;
-
-            }
+            isdblClicked = diff > 0 && diff <= 500;
 
             System.out.println("is double Click = " + isdblClicked);
             return isdblClicked;
@@ -504,9 +498,9 @@ public class MyTunesController {
 
             TableviewSongs.getItems().remove(songToDelete);
             SongDao.deleteSong(songToDelete);
-            for (Playlist playlist : PLaylistDao.getAllPlaylists()) {
+            for (Playlist playlist : PlaylistDao.getAllPlaylists()) {
                 if (playlist.getSongList().contains(songToDelete)) {
-                    PLaylistDao.deleteSongFromPlaylist(playlist, songToDelete);
+                    PlaylistDao.deleteSongFromPlaylist(playlist, songToDelete);
                 }
             }
 
@@ -550,7 +544,7 @@ public class MyTunesController {
 
             Playlist newPlaylist = new Playlist(1, userInput);
             try {
-                PLaylistDao.addPlaylist(newPlaylist);
+                PlaylistDao.addPlaylist(newPlaylist);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -596,7 +590,7 @@ public class MyTunesController {
 
 
             try {
-                PLaylistDao.editPlaylist(songToEdit, userInput);
+                PlaylistDao.editPlaylist(songToEdit, userInput);
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
@@ -607,8 +601,6 @@ public class MyTunesController {
             updateUI();
 
             primaryStage.close();
-
-
 
 
         });
@@ -622,7 +614,7 @@ public class MyTunesController {
 
 
         try {
-            PLaylistDao.deletePlayList(playlistToDelete);
+            PlaylistDao.deletePlayList(playlistToDelete);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
@@ -641,7 +633,7 @@ public class MyTunesController {
         songToDeleteFromPlaylist = TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
         playlistToDeleteFrom = TableviewPlaylists.getSelectionModel().getSelectedItem();
 
-        PLaylistDao.deleteSongFromPlaylist(playlistToDeleteFrom, songToDeleteFromPlaylist);
+        PlaylistDao.deleteSongFromPlaylist(playlistToDeleteFrom, songToDeleteFromPlaylist);
 
         updateUI();
 
