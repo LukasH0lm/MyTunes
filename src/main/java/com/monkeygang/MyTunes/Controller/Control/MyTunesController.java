@@ -5,7 +5,9 @@ import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
 import com.monkeygang.MyTunes.Application.ControlObjects.*;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -120,6 +122,7 @@ public class MyTunesController {
             }
         }
 
+
         TableviewPlaylists.getItems().addAll(allPlaylistList);
 
         updateUI();
@@ -136,6 +139,30 @@ public class MyTunesController {
                 SongDao.addSong(song);
             }
         }
+
+
+
+        ObservableList<Song> data =  TableviewSongs.getItems();
+        filterTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                TableviewSongs.setItems(data);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<Song> subentries = FXCollections.observableArrayList();
+
+            long count = TableviewSongs.getColumns().size();
+            for (int i = 0; i < TableviewSongs.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + TableviewSongs.getColumns().get(j).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(TableviewSongs.getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            TableviewSongs.setItems(subentries);
+        });
+
     }
 
     public void listFilesForFolder(final File folder) throws IOException, InvalidDataException, UnsupportedTagException {
@@ -197,6 +224,9 @@ public class MyTunesController {
 
 
     }
+
+    @FXML
+    private TextField filterTextField;
 
     @FXML
     private TableView<Playlist> TableviewPlaylists;
