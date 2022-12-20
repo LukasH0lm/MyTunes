@@ -5,6 +5,7 @@ import com.monkeygang.MyTunes.Application.BuisnessLogic.PlayManager;
 import com.monkeygang.MyTunes.Application.ControlObjects.*;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -683,20 +684,34 @@ public class MyTunesController {
 
     @FXML
     void playlistSongDown(MouseEvent event) {
-
+        if(TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem() != null)
+        {
+            if(TableviewSongsOnPlaylists.getSelectionModel().getSelectedIndex() != TableviewSongsOnPlaylists.getItems().size()-1) // if the row is in last so dont do nothing
+            {
+                int index = TableviewSongsOnPlaylists.getSelectionModel().getSelectedIndex();
+                Song x = TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
+                TableviewSongsOnPlaylists.getItems().set(index, TableviewSongsOnPlaylists.getItems().get(index+1));
+                TableviewSongsOnPlaylists.getItems().set(index+1, x);
+                TableviewSongsOnPlaylists.getSelectionModel().select(index+1);
+            }
+        }
     }
-
     @FXML
     void playlistSongUp(MouseEvent event) {
-        Song songToMove;
-        Song songbuffer;
-        int songToMoveIndexBuffer;
-
-        songToMove = TableviewSongs.getSelectionModel().getSelectedItem();
 
 
-        TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem();
+        if(TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem() != null) // check if the user really selected a row in the table
+        {
+            if(TableviewSongsOnPlaylists.getSelectionModel().getSelectedIndex() != 0) // if the row first one so do nothing
+            {
+                int index = TableviewSongsOnPlaylists.getSelectionModel().getSelectedIndex(); // get the selected row index
+                Song x = TableviewSongsOnPlaylists.getSelectionModel().getSelectedItem(); // get the selected item
+                TableviewSongsOnPlaylists.getItems().set(index, TableviewSongsOnPlaylists.getItems().get(index-1)); // move the selected item up
+                TableviewSongsOnPlaylists.getItems().set(index-1, x); // change the row with the item in above
+                TableviewSongsOnPlaylists.getSelectionModel().select(index-1); // select the new row position
 
+               }
+            }
     }
 
     public void songMoveHandler(boolean down) {
